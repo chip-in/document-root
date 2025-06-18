@@ -25,7 +25,7 @@ jobs:
         id: get-repos
         run: |
           echo "Fetching repositories from ${{ github.repository_owner }} organization..."
-          REPOS=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/orgs/${{ github.repository_owner }}/repos?per_page=100" | jq -r '.[].name' | xargs)
+          REPOS=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/orgs/${{ github.repository_owner }}/repos" | jq -r '.[].name' | xargs)
           echo "::set-output name=repos::$REPOS"
 
       - name: Download Docs Zips
@@ -41,7 +41,7 @@ jobs:
               ASSET_ID=$(echo "$RELEASE" | jq -r '.assets[] | select(.name == "docs.zip") | .id')
               if [ -n "$ASSET_ID" ]; then
                 echo "Found docs.zip in $repo"
-                curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -H "Accept: application/octet-stream" "https://api.github.com/repos/${{ github.repository_owner }}/$repo/releases/assets/$ASSET_ID" > docs-source/$repo.zip
+                curl -s -L -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -H "Accept: application/octet-stream" "https://api.github.com/repos/${{ github.repository_owner }}/$repo/releases/assets/$ASSET_ID" > docs-source/$repo.zip
                 unzip -o docs-source/$repo.zip -d docs
                 rm docs-source/$repo.zip
               else
