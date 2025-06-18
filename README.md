@@ -7,6 +7,7 @@
 ```yaml
 name: Release Docs
 
+on:
   push:
     branches:
       - main
@@ -27,21 +28,44 @@ jobs:
       - name: Zip Docs
         run: zip -r docs.zip ./docs # Replace ./docs with the actual directory
 
+      - name: Get or Create Latest Release
+        id: get_release
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: releases } = await github.rest.repos.listReleases({
+              owner: context.repo.owner,
+              repo: context.repo.repo
+            });
+            let release = releases.find(r => r.name === "latest");
+            if (!release) {
+              const created = await github.rest.repos.createRelease({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                tag_name: "latest",
+                name: "latest",
+                draft: false,
+                prerelease: false
+              });
+              release = created.data;
+            }
+            core.setOutput('upload_url', release.upload_url);
+
       - name: Upload Docs Zip to Release
         uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ github.event.release.upload_url }}
+          upload_url: ${{ steps.get_release.outputs.upload_url }}
           asset_path: ./docs.zip
           asset_name: docs.zip
           asset_content_type: application/zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Trigger Deploy Workflow
         run: |
           curl -X POST \
             -H "Accept: application/vnd.github.v3+json" \
             -H "Authorization: token ${{ secrets.PAT_FOR_TRIGGER }}" \
-            https://api.github.com/repos/ops-frontier/document-root/dispatches \
+            https://api.github.com/repos/${{ github.repository_owner }}/document-root/dispatches \
             -d '{"event_type": "docs-updated", "client_payload": {"repository": "${{ github.repository }}"}}'
 ```
