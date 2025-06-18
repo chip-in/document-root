@@ -325,14 +325,16 @@ SPN セッションの確立と、双方向ストリームによる通信をサ�
 async fn createSpnConsumerEndPoint(
     spnHubUrl: &str,
     serviceUrn: &str,
-    certificateFilePath: &str
+    certificate: &str,
+    certificate_key: &str
 ) -> Result<impl spnConsumerEndPoint, SpnError>
 ```
 
 - **引数**
   - `spnHubUrl`: SPN ハブの URL
   - `serviceUrn`: サービスの URN
-  - `certificateFilePath`: クライアント証明書ファイルのパス
+  - `certificate`: PEM形式のクライアント証明書
+  - `certificate_key`: PEM形式のクライアント証明書の秘密鍵
 - **戻り値**  
   SPN セッションが確立された `spnConsumerEndPoint` インタフェースのハンドル。エラー時は `SpnError`。
 - **主なエラー例**
@@ -367,14 +369,16 @@ endpoint.connect(my_stream).await?;
 async fn createSpnProviderEndPoint(
     spnHubUrl: &str,
     serviceUrn: &str,
-    certificateFilePath: &str
+    certificate: &str,
+    certificate_key: &str
 ) -> Result<impl spnProviderEndPoint, SpnError>
 ```
 
 - **引数**
   - `spnHubUrl`: SPN ハブの URL
   - `serviceUrn`: サービスの URN
-  - `certificateFilePath`: プロバイダ証明書ファイルのパス
+  - `certificate`: PEM形式のクライアント証明書
+  - `certificate_key`: PEM形式のクライアント証明書の秘密鍵
 - **戻り値**  
   SPN セッションが確立された `spnProviderEndPoint` インタフェースのハンドル。エラー時は `SpnError`。
 - **主なエラー例**
@@ -421,7 +425,8 @@ SPN Consumer エージェントは SPN Hub に接続し、SPN セッションを
 |--|--|--|
 |SPN_HUB_URL|SPN Hub の URL|`https://spn-hub.example.com`|
 |SPN_SERVICE_URN|サービスの URN|`urn:example:service`|
-|SPN_CERTIFICATE_FILE_PATH|クライアント証明書ファイルのパス|`/path/to/cert.pem`|
+|SPN_CERTIFICATE|クライアント証明書|PEM形式のクライアント証明書|
+|SPN_CERTIFICATE_KEY|クライアント証明書秘密鍵|PEM形式のクライアント証明書の秘密鍵|
 |BIND_ADDRESS|エージェントが listen するバインドアドレス|`127.0.0.11:8080`|
 
 起動すると、SPN Hub に接続し、SPN セッションを確立します。
@@ -434,7 +439,8 @@ SPN Provider エージェントは SPN Hub に接続し、SPN セッションを
 |--|--|--|
 |SPN_HUB_URL|SPN Hub の URL|`https://spn-hub.example.com`|
 |SPN_SERVICE_URN|サービスの URN|`urn:example:service`|
-|SPN_CERTIFICATE_FILE_PATH|プロバイダ証明書ファイルのパス|`/path/to/cert.pem`|
+|SPN_CERTIFICATE|クライアント証明書|PEM形式のクライアント証明書|
+|SPN_CERTIFICATE_KEY|クライアント証明書秘密鍵|PEM形式のクライアント証明書の秘密鍵|
 |FORWARD_ADDRESS|SPN Hub からの接続を転送するアドレス|`127.0.0.1:8080`|
 
 起動すると、SPN Hub に接続し、SPN セッションを確立します。
