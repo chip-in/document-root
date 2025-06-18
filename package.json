@@ -1,0 +1,16 @@
+{
+  "name": "@ops-frontier/docusaurus-root",
+  "version": "1.0.0",
+  "description": "Document root for Ops Frontier",
+  "repository": "https://github.com/ops-frontier/document-root",
+  "author": "Mitsuru Nakakawaji <mitsuru@procube.jp>",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "build": "ops-frontier-docusaurus build --out-dir ../build",
+    "start": "ops-frontier-docusaurus start"
+  },
+  "dependencies": {
+    "@ops-frontier/docusaurus": "^0.0.3-rc.0"
+  }
+}

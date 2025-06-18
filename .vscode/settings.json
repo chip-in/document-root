@@ -1,0 +1,7 @@
+{
+    "yaml.schemas": {
+        "test/schemas/workflowDefinition-simple.json": "*.wd.yml",
+        "test/schemas/workflowDefinition-simple.json#/properties/workflow/properties/steps": "*.item.yml",
+        "https://json.schemastore.org/github-workflow.json": "file:///workspaces/document-root/.github/workflows%20/deploy.yml"
+    }
+}
