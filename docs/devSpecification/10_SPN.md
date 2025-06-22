@@ -19,12 +19,13 @@ SPN Hub では SPN エンドポイントからの QUIC での接続を受け付�
 
 ## SPN エンドポイント
 
-SPN エンドポイントは QUIC で SPN Hub に接続するクライアントです。SPNエンドポイントは SPN create を使用して rust で開発することが可能ですが、 SPN エージェントを利用することで、TCPのクライアント/サーバに接続することができます。
+SPN エンドポイントは QUIC で SPN Hub に接続するクライアントです。SPNエンドポイントは SPN create を使用して rust で開発することが可能です。
+また、SPN エージェントを利用して、TCPのクライアント/サーバにも接続できます。
 
 ## SPN セッション
 
-SPN セッションは QUIC のコネクションと同義ですが、SPNのコネクションとの混同を避けるためにあえて、SPN セッションと呼ぶことにします。
-この他に Chip-in では HTTP のセッションやコネクションも登場しますが、そちらとも区別いただくようお願いします。
+SPN セッションは QUIC のコネクションと同義ですが、SPNのコネクションとの混同を避けるためにあえて、SPN セッションと呼びます。
+この他に Chip-in では HTTP のセッションやコネクションも登場しますが、それらとも区別してください。
 
 QUIC コネクション確立後、最初に SPN エンドポイントから SPN Hub に向かって制御ストリームを開始します。制御ストリームの最初の通信として SPN エンドポイントはSPN hub に SPN セッション確立要求を送信します。
 SPN Hub は、セッション確立要求が SPN 内のサービス定義に照らし合わせて許容されていれば SPN エンドポイントにACKを返すとともに SPN セッションオブジェクトをメモリ上に作成します。
@@ -268,11 +269,41 @@ components:
     Service:
       required:
         - urn
+        - providers
+        - consumers
       type: object
       properties:
         urn:
           type: string
-          example: urn:chip-in:service:example.com:authz
+          example: urn:chip-in:service:example.com:authz-rbac
+        title:
+          type: string
+          example: ロールベース認可サービス
+        availabilityManagement:
+          type: object
+          description: |-
+            コンテナクラスタ内でマイクロサービスのスケジュール起動、オンデマンド起動を行うためのパラメータ
+          properties:
+            clusterManagerUrn:
+              type: string
+              description: このサービスを起動できるコンテナクラスタのクラスタマネージャサービスの URN
+            serviceId:
+              type: string
+              description: クラスタ内でのマイクロサービスのID
+            startAt:
+              type: string
+              description: 定時起動する場合の起動スケジュールの CRON 式
+              example: 0 22 ? * SUN-THU *
+            stopAt:
+              type: string
+              description: 定時停止する場合の起動スケジュールの CRON 式
+              example: 0 9 ? * MON-FRI *
+            ondemandStart:
+              type: boolean
+              description: オンデマンド起動とするか否か。デフォルトは true
+            idelTimeout:
+              type: int
+              description: 通信がない状態が一定時間続くとマイクロ。 ondemadStart が true の場合のみ有効
         providers:
           type: array
           items:
@@ -308,6 +339,43 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Service'
+```
+
+### spnhub コマンド
+
+spnhub コマンドは SPN Hub を実装しています。spnhub コマンドのパラメータはコマンドラインオプションと環境変数のいずれかで指定できます。
+パラメータには以下のものがあります。
+
+|オプション|環境変数名|説明|デフォルト|
+|--|--|--|--|
+|-c |SPNHUB_SERVICES_PATH|SPNHUBのサービス定義ファイルのパス。形式は API の Swagger の components.schema.Service で規定された JSON オブジェクトの配列|/etc/spnhub/spn-services.yml|
+|-C |SPNHUB_CA_CERT_PATH|mTLSにおけるクライアント証明書を発行したCA局の証明書(PEM形式)のパス。環境変数SPNHUB_CA_CERTが指定されている場合は無視される。|/etc/pki/tls/cert/spnca.crt|
+||SPNHUB_CA_CERT|mTLSにおけるクライアント証明書を発行したCA局の証明書(PEM形式)の文字列||
+|-h|SPNHUB_FQDN|SPN Hub のサーバのFQDN|core.stg.chip-in.net|
+|-s |SPNHUB_SERVER_CERT_PATH|mTLSにおけるサーバ証明書(PEM形式)のパス。環境変数 SPNHUB_SERVER_CERT が指定されている場合は無視される。|/etc/pki/tls/cert/$SPNHUB_FQDN.crt|
+||SPNHUB_SERVER_CERT|mTLSにおけるサーバ証明書(PEM形式)の文字列||
+|-k |SPNHUB_SERVER_CERT_KEY_PATH|mTLSにおけるサーバ証明書の秘密鍵(PEM形式)のパス。環境変数 SPNHUB_SERVER_CERT_KEY が指定されている場合は無視される。|/etc/pki/tls/private/$SPNHUB_FQDN.key|
+||SPNHUB_SERVER_CERT_KEY|mTLSにおけるサーバ証明書の秘密鍵(PEM形式)の文字列||
+
+/etc/spnhub/spn-services.yml の例
+```yaml
+- urn: urn:chip-in:service:example.com:clusterManager:aws-fargate:apn1-northeast
+  title: AWS fargate 東京リージョンクラスタマネージャ
+  providers:
+    - aws-fargate-apn1-northeast.devops.exmaple.com
+  consumer:
+    - availablity-manager.devops.example.com # SPN hub 本体からの要求のみ受け付ける。このように要検討
+- urn: urn:chip-in:service:example.com:authz-rbac
+  title: ロールベース認可サービス
+  availabilityManagement:
+    clusterManagerUrn: urn:chip-in:service:example.com:clusterManager:aws-fargate:apn1-northeast
+    serviceId: authz-rbac
+    ondemandStart: true
+    idelTimeout: 300
+  providers:
+    - authz-rbac.devops.example.com
+  consumer:
+    - api-gateway.devops.example.com
 ```
 
 ## SPN エンドポイント crate
@@ -353,7 +421,7 @@ async fn createSpnConsumerEndPoint(
 ```rust
 let endpoint = createSpnConsumerEndPoint(
     "https://spn-hub.example.com",
-    "urn:example:service",
+    "urn:chip-in:service:example.com:foo",
     "/path/to/cert.pem"
 ).await?;
 
