@@ -6,6 +6,7 @@ sidebar_position: 10
 # 分散マイクロサービス基盤 Chip-in
 
 Chip-in では、マイクロサービスをクラウド上に自由に分散して配置できる分散マイクロサービス(Distributed Micor Services)の基盤を提供します。
+Chip-inを使用すれば、開発者は喫茶店の Wifi に PC を接続してあらゆるサービスをデバッグできます。
 
 ## メリット
 

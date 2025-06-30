@@ -12,6 +12,8 @@
     "start": "ops-frontier-docusaurus start"
   },
   "dependencies": {
-    "@ops-frontier/docusaurus": "^0.0.3-rc.0"
+    "@docusaurus/tsconfig": "^3.8.1",
+    "@ops-frontier/docusaurus": "^0.0.3-rc.0",
+    "redocusaurus": "^2.5.0"
   }
 }

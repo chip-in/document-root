@@ -96,250 +96,7 @@ SPN　セッションはセッションの開設時と終了時にログを出�
 
 SPN Hub Controle API では SPN 内のサービスとアクセス制御を定義できます。
 SPN Hub は 127.0.0.1:8080 ポートで listen しています。
-この API の Swaggerの定義は以下の通り。
-
-```yaml
-openapi: 3.0.4
-info:
-  title: SPN API
-  description: |-
-    これは SPN のサービス定義とアクセス制御を管理するためのAPIである。
-  contact:
-    email: mitsuru@procube.jp
-  license:
-    name: Apache 2.0
-    url: https://www.apache.org/licenses/LICENSE-2.0.html
-  version: 1.0.0
-servers:
-  - url: https://127.0.0.1:8080
-tags:
-  - name: service
-    description: SPN経由で提供されるマイクロサービス
-  - name: urn
-    description: リソースを一意に特定するための文字列
-    externalDocs:
-      description: Uniform Resource Names
-      url: https://tex2e.github.io/rfc-translater/html/rfc8141.html
-paths:
-  /services:
-    put:
-      tags:
-        - service
-        - urn
-      summary: Update an existing service.
-      description: Update an existing service by service URN.
-      operationId: updateService
-      requestBody:
-        description: Update an existent service in the SPN
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Service'
-        required: true
-      responses:
-        '200':
-          description: Successful operation, return the new contents.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Service'
-        '400':
-          description: Invalid URN supplied
-        '404':
-          description: Service not found
-        '422':
-          description: Validation exception
-        default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-    post:
-      tags:
-        - service
-      summary: Add a new service to the SPN.
-      description: Add a new service to the store.
-      operationId: addService
-      requestBody:
-        description: Create a new service in the store
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Service'
-        required: true
-      responses:
-        '200':
-          description: Successful operation, return the new contents.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Service'
-        '400':
-          description: Invalid input
-        '422':
-          description: Validation exception
-        default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-    get:
-      tags:
-        - service
-      summary: Finds Services
-      description: get list of services.
-      operationId: listServices
-      responses:
-        '200':
-          description: successful operation
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Service'
-        '400':
-          description: Invalid status value
-        default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-
-  /service/{serviceUrn}:
-    get:
-      tags:
-        - service
-      summary: Find service by urn.
-      description: Returns a single service.
-      operationId: getServiceByUrn
-      parameters:
-        - name: serviceUrn
-          in: path
-          description: URN of service to return
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Service'
-        '400':
-          description: Invalid URN supplied
-        '404':
-          description: Service not found
-        default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-    delete:
-      tags:
-        - service
-      summary: Deletes a service.
-      description: Delete a service.
-      operationId: deleteService
-      parameters:
-        - name: serviceUrn
-          in: path
-          description: Pet id to delete
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Service deleted
-        '400':
-          description: Invalid URN value
-        default:
-          description: Unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-components:
-  schemas:
-    Service:
-      required:
-        - urn
-        - providers
-        - consumers
-      type: object
-      properties:
-        urn:
-          type: string
-          example: urn:chip-in:service:example.com:authz-rbac
-        title:
-          type: string
-          example: ロールベース認可サービス
-        availabilityManagement:
-          type: object
-          description: |-
-            コンテナクラスタ内でマイクロサービスのスケジュール起動、オンデマンド起動を行うためのパラメータ
-          properties:
-            clusterManagerUrn:
-              type: string
-              description: このサービスを起動できるコンテナクラスタのクラスタマネージャサービスの URN
-            serviceId:
-              type: string
-              description: クラスタ内でのマイクロサービスのID
-            startAt:
-              type: string
-              description: 定時起動する場合の起動スケジュールの CRON 式
-              example: 0 22 ? * SUN-THU *
-            stopAt:
-              type: string
-              description: 定時停止する場合の起動スケジュールの CRON 式
-              example: 0 9 ? * MON-FRI *
-            ondemandStart:
-              type: boolean
-              description: オンデマンド起動とするか否か。デフォルトは true
-            idelTimeout:
-              type: int
-              description: 通信がない状態が一定時間続くとマイクロ。 ondemadStart が true の場合のみ有効
-        providers:
-          type: array
-          items:
-            type: string
-          description: |-
-            当該サービスの提供が許可されるエンドポイント
-            クライアント証明書の Subject の値と照合される
-          example:
-            - oidc-authz-provider
-        consumers:
-          type: array
-          items:
-            type: string
-          description: |-
-            当該サービスの利用が許可されるエンドポイント
-            クライアント証明書の Subject の値と照合される
-          example:
-            - api-gateway
-    Error:
-      type: object
-      properties:
-        code:
-          type: string
-        message:
-          type: string
-      required:
-        - code
-        - message
-  requestBodies:
-    Service:
-      description: Service object that needs to be added to the SPN
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Service'
-```
+この API の定義はインベントリ
 
 ### spnhub コマンド
 
@@ -359,16 +116,16 @@ spnhub コマンドは SPN Hub を実装しています。spnhub コマンドの
 
 /etc/spnhub/spn-services.yml の例
 ```yaml
-- urn: urn:chip-in:service:example.com:clusterManager:aws-fargate:apn1-northeast
+- urn: urn:chip-in:service:example-realm:clusterManager:aws-fargate:apn1-northeast
   title: AWS fargate 東京リージョンクラスタマネージャ
   providers:
     - aws-fargate-apn1-northeast.devops.exmaple.com
   consumer:
     - availablity-manager.devops.example.com # SPN hub 本体からの要求のみ受け付ける。このように要検討
-- urn: urn:chip-in:service:example.com:authz-rbac
+- urn: urn:chip-in:service:example-realm:authz-rbac
   title: ロールベース認可サービス
   availabilityManagement:
-    clusterManagerUrn: urn:chip-in:service:example.com:clusterManager:aws-fargate:apn1-northeast
+    clusterManagerUrn: urn:chip-in:service:example-realm:clusterManager:aws-fargate:apn1-northeast
     serviceId: authz-rbac
     ondemandStart: true
     idelTimeout: 300
@@ -421,7 +178,7 @@ async fn createSpnConsumerEndPoint(
 ```rust
 let endpoint = createSpnConsumerEndPoint(
     "https://spn-hub.example.com",
-    "urn:chip-in:service:example.com:foo",
+    "urn:chip-in:service:example-realm:foo",
     "/path/to/cert.pem"
 ).await?;
 
@@ -471,7 +228,7 @@ async fn createSpnProviderEndPoint(
 ```rust
 let provider = createSpnProviderEndPoint(
     "https://spn-hub.example.com",
-    "urn:example:service",
+    "urn:chip-in:service:example-realm:foo",
     "/path/to/cert.pem"
 ).await?;
 
