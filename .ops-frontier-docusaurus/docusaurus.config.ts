@@ -45,7 +45,7 @@ const originalItems: Array<NavbarItem> = [
         label: "利用者マニュアル",
     },
     {
-        href: "https://github.com/ops-frontier/repositories",
+        href: "https://github.com/orgs/chip-in/repositories",
         label: "GitHub",
         position: "right",
     },
@@ -71,14 +71,14 @@ const config: Config = {
   favicon: "img/favicon.ico",
 
   // Set the production url of your site here
-  url: "https://ops-frontier.dev",
+  url: "https://chip-in.net",
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: "/",
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  organizationName: "ops-frontier", // Usually your GitHub org/user name.
+  organizationName: "chip-in", // Usually your GitHub org/user name.
   projectName: "docusaurus", // Usually your repo name.
 
   onBrokenLinks: "throw",
@@ -127,14 +127,6 @@ const config: Config = {
           path: "openapi",
           routeBasePath: "/api",
         },
-        // specs: [
-        //   // Optionally provide individual files/urls to load
-        //   {
-        //     // Pass it a path to a local OpenAPI YAML file
-        //     spec: "openapi/inventory/index.openapi.yaml",
-        //     id: "inventory",
-        //   },
-        // ],
         // Theme Options for modifying how redoc renders them
         theme: {
           // Change with your site colors
@@ -150,8 +142,8 @@ const config: Config = {
     navbar: {
       title: "",
       logo: {
-        alt: "Ops Frontier Logo",
-        src: "img/symbol_logo_4c.svg",
+        alt: "Chip-in Logo",
+        src: "img/chip-in-logo-text.png",
       },
       items: filteredItems,
     },

@@ -2,6 +2,7 @@
 title: SPN
 sidebar_position: 10
 ---
+import ApiSchema from '@theme/ApiSchema';
 
 # SPN
 
@@ -92,48 +93,42 @@ SPN　セッションはセッションの開設時と終了時にログを出�
 |elapsedTime|コネクション開設時からの経過時間。 endSpnConnection のときのみ出力される|
 |disconnectReason|コネクションの切断理由。"closedByPeer", "closed", "error" のいずれか。 endSpnConnection のときのみ出力される|
 
-## SPN Hub Controle API
-
-SPN Hub Controle API では SPN 内のサービスとアクセス制御を定義できます。
-SPN Hub は 127.0.0.1:8080 ポートで listen しています。
-この API の定義はインベントリ
-
 ### spnhub コマンド
 
-spnhub コマンドは SPN Hub を実装しています。spnhub コマンドのパラメータはコマンドラインオプションと環境変数のいずれかで指定できます。
+spnhub コマンドは SPN Hub を実装します。spnhub コマンドのパラメータはコマンドラインオプションと環境変数のいずれかで指定できます。
 パラメータには以下のものがあります。
 
 |オプション|環境変数名|説明|デフォルト|
 |--|--|--|--|
-|-c |SPNHUB_SERVICES_PATH|SPNHUBのサービス定義ファイルのパス。形式は API の Swagger の components.schema.Service で規定された JSON オブジェクトの配列|/etc/spnhub/spn-services.yml|
-|-C |SPNHUB_CA_CERT_PATH|mTLSにおけるクライアント証明書を発行したCA局の証明書(PEM形式)のパス。環境変数SPNHUB_CA_CERTが指定されている場合は無視される。|/etc/pki/tls/cert/spnca.crt|
-||SPNHUB_CA_CERT|mTLSにおけるクライアント証明書を発行したCA局の証明書(PEM形式)の文字列||
-|-h|SPNHUB_FQDN|SPN Hub のサーバのFQDN|core.stg.chip-in.net|
-|-s |SPNHUB_SERVER_CERT_PATH|mTLSにおけるサーバ証明書(PEM形式)のパス。環境変数 SPNHUB_SERVER_CERT が指定されている場合は無視される。|/etc/pki/tls/cert/$SPNHUB_FQDN.crt|
-||SPNHUB_SERVER_CERT|mTLSにおけるサーバ証明書(PEM形式)の文字列||
-|-k |SPNHUB_SERVER_CERT_KEY_PATH|mTLSにおけるサーバ証明書の秘密鍵(PEM形式)のパス。環境変数 SPNHUB_SERVER_CERT_KEY が指定されている場合は無視される。|/etc/pki/tls/private/$SPNHUB_FQDN.key|
-||SPNHUB_SERVER_CERT_KEY|mTLSにおけるサーバ証明書の秘密鍵(PEM形式)の文字列||
+|-c |SPNHUB_INVENTORY_URL|SPN Hub の構成情報を提供するインベントリのURL。|http://localhost:8080|
 
-/etc/spnhub/spn-services.yml の例
-```yaml
-- urn: urn:chip-in:service:example-realm:clusterManager:aws-fargate:apn1-northeast
-  title: AWS fargate 東京リージョンクラスタマネージャ
-  providers:
-    - aws-fargate-apn1-northeast.devops.exmaple.com
-  consumer:
-    - availablity-manager.devops.example.com # SPN hub 本体からの要求のみ受け付ける。このように要検討
-- urn: urn:chip-in:service:example-realm:authz-rbac
-  title: ロールベース認可サービス
-  availabilityManagement:
-    clusterManagerUrn: urn:chip-in:service:example-realm:clusterManager:aws-fargate:apn1-northeast
-    serviceId: authz-rbac
-    ondemandStart: true
-    idelTimeout: 300
-  providers:
-    - authz-rbac.devops.example.com
-  consumer:
-    - api-gateway.devops.example.com
-```
+spnhubコマンドは起動時とリロードシグナル受信時に構成情報を[インベントリ](/docs/devSpecification/inventory-openapi) から読み込みます。具体的には以下の順に読み込みます。リロードシグナルは SIGUSR1 です。
+
+#### 1. レルムの読み込み
+
+全てのレルムを読み込みます。
+SPN Hub はレルムごとに内部が分離されており、マルチテナントのシステムを容易に実装できます。
+
+<ApiSchema pointer="#/components/schemas/Realm" />
+
+- disabled が True のものは無視します。
+- リロードにおいては、一覧の前後を比較し、追加削除を行います。
+
+### 2. SPN Hub の構築
+
+レルムごとに SPN Hub を構築します。
+
+<ApiSchema pointer="#/components/schemas/Hub" />
+
+
+### 3. サービスの構築
+
+SPN Hub ごとにサービスの定義を読み込みます。
+
+<ApiSchema pointer="#/components/schemas/Service" />
+
+availabilityManagement が指定されていて、かつ ondemandStart が false のサービスについてはクラスタマネージャを呼び出してサービスを起動する。
+サービス定義の読み込みが終わった時点で、SPN Hub での QUIC パケットの受信を開始します。
 
 ## SPN エンドポイント crate
 

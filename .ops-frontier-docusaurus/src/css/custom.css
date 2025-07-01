@@ -122,3 +122,7 @@ table.item-list,table.item-list tr, table.item-list td {
 table.item-list td:nth-child(1){
   font-weight: bold;
 }
+/* Redoc styles */
+body .container {
+  max-width: 95vw !important;
+}
