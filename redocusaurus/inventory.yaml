@@ -13,19 +13,41 @@ info:
 servers:
   - url: https://127.0.0.1:8080
 tags:
-  - name: zone
-    description: API Gateway で外部に露出するDNS上のゾーン
   - name: realm
     description: マイクロサービスをグループ化するための論理的な区分。'/' などパスとして使用できない文字を含むことはできない。
+  - name: zone
+    description: API Gateway で外部に露出するDNS上のゾーン
+  - name: virtual-host
+    description: ゾーンに紐づく仮想ホスト。
+  - name: routing-chain
+    description: API Gateway でのルーティングチェーン。
+  - name: hub
+    description: SPNのハブ。
   - name: service
     description: SPN経由で提供されるマイクロサービス
-  - name: urn
-    description: リソースを一意に特定するための文字列
-    externalDocs:
-      description: Uniform Resource Names
-      url: https://tex2e.github.io/rfc-translater/html/rfc8141.html
 paths:
-  /realms/{realm}/realm:
+  /realms:
+    get:
+      tags:
+        - realm
+      summary: List all realms.
+      description: Returns a list of all realms.
+      operationId: listRealms
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Realm'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
     put:
       tags:
         - realm
@@ -102,6 +124,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /realms/{realm}:
     get:
       tags:
         - realm
@@ -200,7 +223,7 @@ paths:
       tags:
         - zone
       summary: Add a new zone to the SPN.
-      description: Add a new zone to the store.
+      description: Add a new zone to the realm.
       operationId: addZone
       parameters:
         - name: realm
@@ -330,18 +353,547 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  /realms/{realm}/services:
+  /realms/{realm}/zones/{zone}/virtual-hosts:
+    put:
+      tags:
+        - virtual-host
+      summary: Update an existing virtual host.
+      description: Update an existing virtual host by virtual host name.
+      operationId: updateVirtualHost
+      parameters:
+        - name: realm
+          in: path
+          description: relam which zone belogs to
+          required: true
+          schema:
+            type: string
+        - name: zone
+          in: path
+          description: Name of zone which virtual host belogs to
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Update an existent virtual host in the SPN
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VirtualHost'
+        required: true
+      responses:
+        '200':
+          description: Successful operation, return the new contents.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VirtualHost'
+        '400':
+          description: Invalid Name supplied
+        '404':
+          description: Virtual Host not found
+        '422':
+          description: Validation exception
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      tags:
+        - virtual-host
+      description: Add a new virtual host to the zone.
+      operationId: addVirtualHost
+      parameters:
+        - name: realm
+          in: path
+          description: relam which zone belogs to
+          required: true
+          schema:
+            type: string
+        - name: zone
+          in: path
+          description: Name of zone which virtual host belogs to
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Create a new virtual host in the zone
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VirtualHost'
+        required: true
+      responses:
+        '200':
+          description: Successful operation, return the new contents.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VirtualHost'
+        '400':
+          description: Invalid input
+        '422':
+          description: Validation exception
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    get:
+      tags:
+        - virtual-host
+      description: Finds Virtual Hosts
+      operationId: listVirtualHosts
+      parameters:
+        - name: realm
+          in: path
+          description: relam which zone belogs to
+          required: true
+          schema:
+            type: string
+        - name: zone
+          in: path
+          description: Name of zone which virtual host belogs to
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/VirtualHost'
+        '400':
+          description: Invalid status value
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /realms/{realm}/zones/{zone}/virtual-hosts/{virtualHost}:
+    get:
+      tags:
+        - virtual-host
+      summary: Find virtual host by name.
+      description: Returns a single virtual host.
+      operationId: getVirtualHostByName
+      parameters:
+        - name: realm
+          in: path
+          description: relam which zone belogs to
+          required: true
+          schema:
+            type: string
+        - name: zone
+          in: path
+          description: Name of zone which virtual host belogs to
+          required: true
+          schema:
+            type: string
+        - name: virtualHost
+          in: path
+          description: Name of virtual host to return
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VirtualHost'
+        '400':
+          description: Invalid Name supplied
+        '404':
+          description: Virtual Host not found
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - virtual-host
+      summary: Deletes a virtual host.
+      description: Delete a virtual host.
+      operationId: deleteVirtualHost
+      parameters:
+        - name: realm
+          in: path
+          description: relam which zone belogs to
+          required: true
+          schema:
+            type: string
+        - name: zone
+          in: path
+          description: Name of zone which virtual host belogs to
+          required: true
+          schema:
+            type: string
+        - name: virtualHost
+          in: path
+          description: Virtual Host URN to delete
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Virtual Host deleted
+        '400':
+          description: Invalid Name value
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /realms/{realm}/routing-chains/:
+    put:
+      tags:
+        - routing-chain
+      summary: Update an existing routing chain.
+      description: Update an existing routing chain by routing chain name.
+      operationId: updateRoutingChain
+      parameters:
+        - name: realm
+          in: path
+          description: relam which routing chain belogs to
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Update an existent routing chain in the Realm.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoutingChain'
+        required: true
+      responses:
+        '200':
+          description: Successful operation, return the new contents.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoutingChain'
+        '400':
+          description: Invalid Name supplied
+        '404':
+          description: Routing Chain not found
+        '422':
+          description: Validation exception
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      tags:
+        - routing-chain
+      summary: Add a new routing chain to the Realm.
+      description: Add a new routing chain to the realm.
+      operationId: addRoutingChain
+      parameters:
+        - name: realm
+          in: path
+          description: relam which routing chain belogs to
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Create a new routing chain in the realm.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoutingChain'
+        required: true
+      responses:
+        '200':
+          description: Successful operation, return the new contents.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoutingChain'
+        '400':
+          description: Invalid input
+        '422':
+          description: Validation exception
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    get:
+      tags:
+        - routing-chain
+      summary: Finds Routing Chains
+      description: get list of routing chains.
+      operationId: listRoutingChains
+      parameters:
+        - name: realm
+          in: path
+          description: rel
+  /realms/{realm}/routing-chains/{routingChainName}:
+    get:
+      tags:
+        - routing-chain
+      summary: Find routing chain by name.
+      description: Returns a single routing chain.
+      operationId: getRoutingChainByName
+      parameters:
+        - name: realm
+          in: path
+          description: relam which routing chain belogs to
+          required: true
+          schema:
+            type: string
+        - name: routingChainName
+          in: path
+          description: Name of routing chain to return
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoutingChain'
+        '400':
+          description: Invalid Name supplied
+        '404':
+          description: Routing Chain not found
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - routing-chain
+      summary: Deletes a routing chain.
+      description: Delete a routing chain.
+      operationId: deleteRoutingChain
+      parameters:
+        - name: realm
+          in: path
+          description: relam which routing chain belogs to
+          required: true
+          schema:
+            type: string
+        - name: routingChainName
+          in: path
+          description: Routing Chain URN to delete
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Routing Chain deleted
+        '400':
+          description: Invalid Name value
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /realms/{realm}/hubs:
+    put:
+      tags:
+        - hub
+      summary: Update an existing hub.
+      description: Update an existing hub by hub name.
+      operationId: updateHub
+      parameters:
+        - name: realm
+          in: path
+          description: relam which hub belogs to
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Update an existent hub in the SPN
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Hub'
+        required: true
+      responses:
+        '200':
+          description: Successful operation, return the new contents.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Hub'
+        '400':
+          description: Invalid Name supplied
+        '404':
+          description: Hub not found
+        '422':
+          description: Validation exception
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      tags:
+        - hub
+      summary: Add a new hub to the SPN.
+      description: Add a new hub to the realm.
+      operationId: addHub
+      parameters:
+        - name: realm
+          in: path
+          description: relam which hub belogs to
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Create a new hub in the realm
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Hub'
+        required: true
+      responses:
+        '200':
+          description: Successful operation, return the new contents.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Hub'
+        '400':
+          description: Invalid input
+        '422':
+          description: Validation exception
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    get:
+      tags:
+        - hub
+      summary: Finds Hubs
+      description: get list of hubs.
+      operationId: listHubs
+      parameters:
+        - name: realm
+          in: path
+          description: relam which hub belogs to
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Hub'
+        '400':
+          description: Invalid status value
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /realms/{realm}/hubs/{hubName}:
+    get:
+      tags:
+        - hub
+      summary: Find hub by name.
+      description: Returns a single hub.
+      operationId: getHubByName
+      parameters:
+        - name: realm
+          in: path
+          description: relam which service belogs to
+          required: true
+          schema:
+            type: string
+        - name: hubName
+          in: path
+          description: Name of hub to return
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Hub'
+        '400':
+          description: Invalid Name supplied
+        '404':
+          description: Hub not found
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - hub
+      summary: Deletes a hub.
+      description: Delete a hub.
+      operationId: deleteHub
+      parameters:
+        - name: hubName
+          in: path
+          description: Hub URN to delete
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Hub deleted
+        '400':
+          description: Invalid Name value
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /realms/{realm}/hubs/{hubName}/services:
     put:
       tags:
         - service
-        - urn
       summary: Update an existing service.
-      description: Update an existing service by service URN.
+      description: Update an existing service by service Name.
       operationId: updateService
       parameters:
         - name: realm
           in: path
           description: relam which service belogs to
+          required: true
+          schema:
+            type: string
+        - name: hubName
+          in: path
+          description: Name of hub which service belogs to
           required: true
           schema:
             type: string
@@ -360,7 +912,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Service'
         '400':
-          description: Invalid URN supplied
+          description: Invalid Name supplied
         '404':
           description: Service not found
         '422':
@@ -375,7 +927,7 @@ paths:
       tags:
         - service
       summary: Add a new service to the SPN.
-      description: Add a new service to the store.
+      description: Add a new service to the realm.
       operationId: addService
       parameters:
         - name: realm
@@ -385,7 +937,7 @@ paths:
           schema:
             type: string
       requestBody:
-        description: Create a new service in the store
+        description: Create a new service in the realm
         content:
           application/json:
             schema:
@@ -438,13 +990,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  /realms/{realm}/service/{serviceUrn}:
+  /realms/{realm}/hubs/{hubName}/services/{serviceName}:
     get:
       tags:
         - service
       summary: Find service by urn.
       description: Returns a single service.
-      operationId: getServiceByUrn
+      operationId: getServiceByName
       parameters:
         - name: realm
           in: path
@@ -452,7 +1004,13 @@ paths:
           required: true
           schema:
             type: string
-        - name: serviceUrn
+        - name: hubName
+          in: path
+          description: Name of hub which service belogs to
+          required: true
+          schema:
+            type: string
+        - name: serviceName
           in: path
           description: URN of service to return
           required: true
@@ -482,7 +1040,7 @@ paths:
       description: Delete a service.
       operationId: deleteService
       parameters:
-        - name: serviceUrn
+        - name: serviceName
           in: path
           description: Service URN to delete
           required: true
@@ -506,20 +1064,31 @@ components:
       required:
         - name
         - title
+        - cacert
+        - disabled
       properties:
         name:
           type: string
           description: |-
             レルムの名前。URN の一部として使用される。
             文字列は小文字英字、数字、ハイフン、アンダースコアのみを含むことができる。
-            例: example-realm
           example: example-realm
         title:
           type: string
-          example: チップインの例のレルム
+          description: レルムの日本語名称です。
+          example: CMSシステム
         description:
           type: string
-          example: チップインの例のレルムです。
+          description: レルムの説明文です。
+          example: CMSシステムのレルムです。
+        cacert:
+          type: string
+          description: realm 配下の SPN hub で mTLSにおけるクライアント証明書を発行したCA局の証明書(PEM形式)の文字列
+          example: |-
+            -----BEGIN CERTIFICATE-----
+            MIIDXTCCAkWgAwIBAgIJAL5z1Z2k5b4wMA0GCSqGSIb3DQEBCwUAMEUxCzAJBgNV
+            ...
+            -----END CERTIFICATE-----
         administrators:
           type: array
           items:
@@ -527,6 +1096,20 @@ components:
           description: レルムの管理者のユーザID。ユーザの管理はインベントリでは行わない。認証サービス内でのみ管理され、ここではそのIDのみを参照する。
           example:
             - chip-in-admin@example.com
+        expiredAt:
+          type: string
+          format: date-time
+          description: |-
+            レルムの有効期限。ISO8601形式で指定する。
+            この日時を過ぎると、レルムの disabled フラグは true となり、関連するリソースへのアクセスが制限される。
+          example: '2024-12-31T23:59:59Z'
+        disabled:
+          type: boolean
+          description: |-
+            レルムが無効化されているかどうかを示すフラグ。
+            true の場合、レルムは無効化されており、関連するリソースへのアクセスが制限される。
+            false の場合、レルムは有効であり、通常の操作が可能である。
+          example: false
     Zone:
       type: object
       required:
@@ -542,10 +1125,12 @@ components:
           example: example.com
         title:
           type: string
-          example: chip-in 検証環境ゾーン
+          description: ゾーンの日本語名称です。
+          example: CMSシステム検証環境ゾーン
         description:
           type: string
-          example: chip-in v2 の検証環境用のゾーンです。
+          description: ゾーンの説明文ですです。
+          example: CMSシステムの検証環境用のゾーンです。
         realm:
           type: string
           description: ゾーンが属するレルムの名前。
@@ -557,21 +1142,7 @@ components:
           type: string
           description: ゾーンのSSL/TLS証明書を自動的に取得するためのACME証明書プロバイダのURL
           example: https://acme-v02.api.letsencrypt.org/directory
-        hosts:
-          type: array
-          items:
-            $ref: '#/components/schemas/VertualHost'
-          description: |-
-            ゾーンに紐づく仮想ホストのリスト。
-            仮想ホストは、ゾーン内で特定のサービスやアプリケーションを識別するために使用される。
-            dnsProvider が設定されている場合、ゾーンにこの仮想ホストのDNSレコードが自動的に作成される。
-            また、lets encrypt などの自動証明書発行サービスを使用して、仮想ホストに必要なSSL/TLS証明書を自動的に取得する。
-          example:
-            - name: www.stg
-              title: CMSシステム
-              description: CMSシステムのWebUI を提供する仮想ホストです。
-              routingChain: urn:chip-in:routing-chain:example-realm:cms-chain
-    VertualHost:
+    VirtualHost:
       type: object
       required:
         - name
@@ -621,27 +1192,58 @@ components:
             MIIEpAIBAAKCAQEA7v1z1Z2k5b4wMA0GCSqGSIb3DQEBCwUAMEUxCzAJBgNVBAYT
             ...
             -----END RSA PRIVATE KEY-----
+        disabled:
+          type: boolean
+          description: >-
+            仮想ホストが無効化されているかどうかを示すフラグ。
+
+            true
+            の場合、仮想ホストは無効化されており、仮想ホストは削除され、アクセスは拒否される（TLSの場合、SSL_ERROR_HANDSHAKE_FAILURE
+            を返し、平文の場合、400 Bad Request が返す）。
+
+            false の場合、仮想ホストは有効であり、アクセスが可能である。
+          example: false
     RoutingChain:
       type: object
       required:
+        - name
         - urn
         - title
         - realm
       properties:
+        name:
+          type: string
+          description: |-
+            ルーティングチェーンの名前。URN の一部として使用される。
+            文字列は小文字英字、数字、ハイフン、アンダースコアのみを含むことができる。
+          example: cms-chain
         urn:
           type: string
+          readOnly: true
           description: ルーティングチェーンのurn。
           example: urn:chip-in:routing-chain:example-realm:cms-chain
         title:
           type: string
-          example: CMSシステムのルーティングチェーン
+          description: ルーティングチェーンの日本語名称です。
+          example: CMSシステムルーティングチェーン
         description:
           type: string
+          description: ルーティングチェーンの説明文です。
           example: CMSシステムのWebUI を提供するルーティングチェーンです。
         rules:
           type: array
+          description: |-
+            ルーティングチェーンのルールのリスト。各ルールは、リクエストを処理するための条件とアクションを定義する。
+            ルールは、リクエストのパスやヘッダなどを照合し、適切なアクションを実行するために使用される。
           items:
             type: object
+            required:
+              - match
+              - action
+            description: |-
+              ルーティングチェーンのルール。各ルールは、リクエストを処理するための条件とアクションを定義する。
+              ルールは、リクエストのパスやヘッダなどを照合し、
+              適切なアクションを実行するために使用される。
             properties:
               match:
                 type: string
@@ -652,8 +1254,9 @@ components:
                   request.path.starts_with("/api") &&
                   request.headers["X-Auth-Token"]
               action:
-                oneof:
+                oneOf:
                   - type: object
+                    title: Proxy
                     description: |-
                       リクエストをプロキシ先のサービスに転送するためのアクション。
                       前フェーズまでで作成されたレスポンスは破棄され、プロキシ先サービスから返却されたものが新しいレスポンスとなる。
@@ -674,6 +1277,7 @@ components:
                           デフォルトは false で、リクエストボディは転送される。
                         example: false
                   - type: object
+                    title: Redirect
                     description: |-
                       リダイレクトを行うためのアクション。レスポンスの stauts は 302 に設定される。
                       リダイレクト先のURLは、レスポンスの Location ヘッダに設定される。
@@ -688,6 +1292,7 @@ components:
                         description: レスポンスの Location ヘッダに設定されるリダイレクト先のURL。
                         example: https://idp.example.com/login
                   - type: object
+                    title: Jump
                     description: >-
                       別のルーティングチェーンにリクエストを転送するためのアクション。処理中のチェーンは終了し、転送先のチェーンが新たに開始される。
                     properties:
@@ -700,12 +1305,13 @@ components:
                         description: ルーティングチェーンのURN。
                         example: urn:chip-in:routing-chain:example-realm:cms-chain
                   - type: object
+                    title: AccessLog
                     description: アクセスログを出力する。
                     properties:
                       type:
                         type: string
                         enum:
-                          - log
+                          - accessLog
                       target:
                         type: string
                         description: ログ出力サービスのURN。
@@ -733,29 +1339,120 @@ components:
                           description: >-
                             RHAI の式で、リクエストやレスポンスの情報を参照して値を算出する。ただし、結果が undefined
                             や null の場合は "-" となる。
+    Hub:
+      type: object
+      required:
+        - name
+        - realm
+        - urn
+        - title
+        - fqdn
+        - serverCert
+        - serverCertKey
+      properties:
+        name:
+          type: string
+          description: |-
+            SPN Hub の名前。URN の一部として使用される。
+            文字列は小文字英字、数字、ハイフン、アンダースコアのみを含むことができる。
+          example: hub1
+        realm:
+          type: string
+          description: SPN Hub が属する realm の名前。URN の一部として使用される。
+          example: example-realm
+        urn:
+          type: string
+          readOnly: true
+          description: |-
+            SPN Hub のURN。URNは、SPN Hubを一意に識別するための文字列で、以下の形式で構成される。
+            urn:chip-in:network:{realm}:{name}
+          example: urn:chip-in:network:example-realm:hub1
+        title:
+          type: string
+          description: SPN Hub の日本語名称です。
+          example: CMSシステムプライベートネットワークハブ
+        description:
+          type: string
+          description: SPN Hub の説明文です。
+          example: CMSシステム用のプライベートネットワークのハブ
+        fqdn:
+          type: string
+          description: SPN Hub のサーバのFQDN
+          example: core.stg.chip-in.net
+        serverPort:
+          type: integer
+          description: SPN Hub のサーバのポート番号。デフォルトは 443
+          example: 443
+        serverCert:
+          type: string
+          description: |-
+            mTLSにおけるサーバ証明書(PEM形式)の文字列。
+            SPN Hub のサーバは、この証明書を使用してクライアントとの通信を暗号化する。
+          example: |-
+            -----BEGIN CERTIFICATE-----
+            MIIDXTCCAkWgAwIBAgIJAL5z1Z2k5b4wMA0GCSqGSIb3DQEBCwUAMEUxCzAJBgNV
+            ...
+            -----END CERTIFICATE-----
+        serverCertKey:
+          type: string
+          description: |-
+            mTLSにおけるサーバ証明書の秘密鍵(PEM形式)の文字列。
+            SPN Hub のサーバは、この秘密鍵を使用してクライアントとの通信を暗号化する。
+          example: |-
+            -----BEGIN RSA PRIVATE KEY-----
+            MIIEpAIBAAKCAQEA7v1z1Z2k5b4wMA0GCSqGSIb3DQEBCwUAMEUxCzAJBgNVBAYT
+            ...
+            -----END RSA PRIVATE KEY-----
     Service:
       required:
+        - name
         - urn
         - title
         - realm
+        - hubName
         - providers
         - consumers
       type: object
       properties:
+        name:
+          type: string
+          description: |-
+            サービスの名前。URN の一部として使用される。
+            文字列は小文字英字、数字、ハイフン、アンダースコアのみを含むことができる。
+          example: authz-rbac
         urn:
           type: string
-          example: urn:chip-in:service:example-realm:authz-rbac
+          readOnly: true
+          description: |-
+            サービスのURN。URNは、サービスを一意に識別するための文字列で、以下の形式で構成される。<br/>
+            urn:chip-in:service:{realm}:{hubName}:{name}
+          example: urn:chip-in:service:example-realm:hub1:authz-rbac
         title:
           type: string
-          example: ロールベース認可サービス
+          description: |-
+            サービスの日本語名称です。URN の一部として使用される。
+            文字列は日本語を含むことができる。
+          example: CMSシステム認可サービス
         description:
           type: string
-          example: チップインの例の認可サービスです。
+          description: |-
+            サービスの説明文です。URN の一部として使用される。
+            文字列は日本語を含むことができる。
+          example: CMSシステムの認可サービスです。
         realm:
           type: string
           description: サービスが属するレルムの名前。
+        hubName:
+          type: string
+          description: |-
+            サービスが接続される SPN Hub の名前。
+            SPN Hub は、サービスの提供を行うためのネットワークハブであり、サービスへのアクセスを管理する。
+          example: hub1
         availabilityManagement:
           type: object
+          required:
+            - clusterManagerUrn
+            - serviceId
           description: コンテナクラスタ内でマイクロサービスのスケジュール起動、オンデマンド起動を行うためのパラメータ
           properties:
             clusterManagerUrn:
