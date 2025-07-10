@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="generator" content="Docusaurus v3.7.0">
 <title data-rh="true">概念モデル | Ops Frontier</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:image" content="https://chip-in.net/img/devsecops.svg"><meta data-rh="true" name="twitter:image" content="https://chip-in.net/img/devsecops.svg"><meta data-rh="true" property="og:url" content="https://chip-in.net/docs/devDesign/models"><meta data-rh="true" property="og:locale" content="ja"><meta data-rh="true" name="docusaurus_locale" content="ja"><meta data-rh="true" name="docsearch:language" content="ja"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="概念モデル | Ops Frontier"><meta data-rh="true" name="description" content="Chip-in を構成する要素は外から見ると、1個のコアサービスと複数のマイクロサービスからなります。ブラウザからのアクセスをコアサービスで受け付けマイクロサービスに分散して処理を行います。接続の方向をマイクロサービスからコアサービスへの方向に限定することで前述の課題を解決します。コアサービスはグローバルIPとサーバ証明書を持ちます。マイクロサービスはクライアント証明書をもっており、コアサービスとの間で mTLS認証を行います。"><meta data-rh="true" property="og:description" content="Chip-in を構成する要素は外から見ると、1個のコアサービスと複数のマイクロサービスからなります。ブラウザからのアクセスをコアサービスで受け付けマイクロサービスに分散して処理を行います。接続の方向をマイクロサービスからコアサービスへの方向に限定することで前述の課題を解決します。コアサービスはグローバルIPとサーバ証明書を持ちます。マイクロサービスはクライアント証明書をもっており、コアサービスとの間で mTLS認証を行います。"><link data-rh="true" rel="icon" href="/img/favicon.ico"><link data-rh="true" rel="canonical" href="https://chip-in.net/docs/devDesign/models"><link data-rh="true" rel="alternate" href="https://chip-in.net/docs/devDesign/models" hreflang="ja"><link data-rh="true" rel="alternate" href="https://chip-in.net/docs/devDesign/models" hreflang="x-default"><link rel="stylesheet" href="/assets/css/styles.8fe6c1ce.css">
-<script src="/assets/js/runtime~main.b4331253.js" defer="defer"></script>
-<script src="/assets/js/main.36c45bce.js" defer="defer"></script>
+<script src="/assets/js/runtime~main.f4bf7d9d.js" defer="defer"></script>
+<script src="/assets/js/main.1f4e947d.js" defer="defer"></script>
 </head>
 <body class="navigation-with-keyboard">
 <script>!function(){function t(t){document.documentElement.setAttribute("data-theme",t)}var e=function(){try{return new URLSearchParams(window.location.search).get("docusaurus-theme")}catch(t){}}()||function(){try{return window.localStorage.getItem("theme")}catch(t){}}();t(null!==e?e:"light")}(),function(){try{const n=new URLSearchParams(window.location.search).entries();for(var[t,e]of n)if(t.startsWith("docusaurus-data-")){var a=t.replace("docusaurus-data-","data-");document.documentElement.setAttribute(a,e)}}catch(t){}}()</script><div id="__docusaurus"><div role="region" aria-label="メインコンテンツまでスキップ"><a class="skipToContent_oPtH" href="#__docusaurus_skipToContent_fallback">メインコンテンツまでスキップ</a></div><nav aria-label="ナビゲーション" class="navbar navbar--fixed-top"><div class="navbar__inner"><div class="navbar__items"><button aria-label="ナビゲーションバーを開く" aria-expanded="false" class="navbar__toggle clean-btn" type="button"><svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><path stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M4 7h22M4 15h22M4 23h22"></path></svg></button><a class="navbar__brand" href="/"><div class="navbar__logo"><img src="/img/chip-in-logo-text.png" alt="Chip-in Logo" class="themedComponent_siVc themedComponent--light_hHel"><img src="/img/chip-in-logo-text.png" alt="Chip-in Logo" class="themedComponent_siVc themedComponent--dark_yETr"></div><b class="navbar__title text--truncate"></b></a><a aria-current="page" class="navbar__item navbar__link navbar__link--active" href="/docs/devDesign/index">設計書</a><a class="navbar__item navbar__link" href="/docs/devSpecification/SPN">仕様書/テスト項目書</a></div><div class="navbar__items navbar__items--right"><a href="https://github.com/orgs/chip-in/repositories" target="_blank" rel="noopener noreferrer" class="navbar__item navbar__link">GitHub<svg width="13.5" height="13.5" aria-hidden="true" viewBox="0 0 24 24" class="iconExternalLink_nPrP"><path fill="currentColor" d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"></path></svg></a><div class="toggle_ki11 colorModeToggle_Hewu"><button class="clean-btn toggleButton_MMFG toggleButtonDisabled_Uw7m" type="button" disabled="" title="ダークモードを切り替える(現在はライトモード)" aria-label="ダークモードを切り替える(現在はライトモード)" aria-live="polite" aria-pressed="false"><svg viewBox="0 0 24 24" width="24" height="24" class="lightToggleIcon_lgto"><path fill="currentColor" d="M12,9c1.65,0,3,1.35,3,3s-1.35,3-3,3s-3-1.35-3-3S10.35,9,12,9 M12,7c-2.76,0-5,2.24-5,5s2.24,5,5,5s5-2.24,5-5 S14.76,7,12,7L12,7z M2,13l2,0c0.55,0,1-0.45,1-1s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S1.45,13,2,13z M20,13l2,0c0.55,0,1-0.45,1-1 s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S19.45,13,20,13z M11,2v2c0,0.55,0.45,1,1,1s1-0.45,1-1V2c0-0.55-0.45-1-1-1S11,1.45,11,2z M11,20v2c0,0.55,0.45,1,1,1s1-0.45,1-1v-2c0-0.55-0.45-1-1-1C11.45,19,11,19.45,11,20z M5.99,4.58c-0.39-0.39-1.03-0.39-1.41,0 c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0s0.39-1.03,0-1.41L5.99,4.58z M18.36,16.95 c-0.39-0.39-1.03-0.39-1.41,0c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0c0.39-0.39,0.39-1.03,0-1.41 L18.36,16.95z M19.42,5.99c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06c-0.39,0.39-0.39,1.03,0,1.41 s1.03,0.39,1.41,0L19.42,5.99z M7.05,18.36c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06 c-0.39,0.39-0.39,1.03,0,1.41s1.03,0.39,1.41,0L7.05,18.36z"></path></svg><svg viewBox="0 0 24 24" width="24" height="24" class="darkToggleIcon_U96C"><path fill="currentColor" d="M9.37,5.51C9.19,6.15,9.1,6.82,9.1,7.5c0,4.08,3.32,7.4,7.4,7.4c0.68,0,1.35-0.09,1.99-0.27C17.45,17.19,14.93,19,12,19 c-3.86,0-7-3.14-7-7C5,9.07,6.81,6.55,9.37,5.51z M12,3c-4.97,0-9,4.03-9,9s4.03,9,9,9s9-4.03,9-9c0-0.46-0.04-0.92-0.1-1.36 c-0.98,1.37-2.58,2.26-4.4,2.26c-2.98,0-5.4-2.42-5.4-5.4c0-1.81,0.89-3.42,2.26-4.4C12.92,3.04,12.46,3,12,3L12,3z"></path></svg></button></div><div class="navbarSearchContainer_bzqh"></div></div></div><div role="presentation" class="navbar-sidebar__backdrop"></div></nav><div id="__docusaurus_skipToContent_fallback" class="main-wrapper mainWrapper_MB5r"><div class="docsWrapper__sE8"><button aria-label="先頭へ戻る" class="clean-btn theme-back-to-top-button backToTopButton_iEvu" type="button"></button><div class="docRoot_DfVB"><aside class="theme-doc-sidebar-container docSidebarContainer_c7NB"><div class="sidebarViewport_KYo0"><div class="sidebar_CUen"><nav aria-label="ドキュメントのサイドバー" class="menu thin-scrollbar menu_jmj1"><ul class="theme-doc-sidebar-menu menu__list"><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/docs/devDesign/index">概要</a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link menu__link--active" aria-current="page" href="/docs/devDesign/models">概念モデル</a></li></ul></nav></div></div></aside><main class="docMainContainer_a9sJ"><div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_Qr34"><div class="docItemContainer_tjFy"><article><nav class="theme-doc-breadcrumbs breadcrumbsContainer_T5ub" aria-label="パンくずリストのナビゲーション"><ul class="breadcrumbs" itemscope="" itemtype="https://schema.org/BreadcrumbList"><li class="breadcrumbs__item"><a aria-label="ホームページ" class="breadcrumbs__link" href="/"><svg viewBox="0 0 24 24" class="breadcrumbHomeIcon_sfvy"><path d="M10 19v-5h4v5c0 .55.45 1 1 1h3c.55 0 1-.45 1-1v-7h1.7c.46 0 .68-.57.33-.87L12.67 3.6c-.38-.34-.96-.34-1.34 0l-8.36 7.53c-.34.3-.13.87.33.87H5v7c0 .55.45 1 1 1h3c.55 0 1-.45 1-1z" fill="currentColor"></path></svg></a></li><li itemscope="" itemprop="itemListElement" itemtype="https://schema.org/ListItem" class="breadcrumbs__item breadcrumbs__item--active"><span class="breadcrumbs__link" itemprop="name">概念モデル</span><meta itemprop="position" content="1"></li></ul></nav><div class="tocCollapsible_wXna theme-doc-toc-mobile tocMobile_Ojys"><button type="button" class="clean-btn tocCollapsibleButton_iI2p">このページの見出し</button></div><div class="theme-doc-markdown markdown"><header><h1>概念モデル</h1></header>
@@ -31,12 +31,23 @@
 <li>docker swarm はサイドカーをサポートしていません。</li>
 <li>kubernetes は機能的にすべてをサポートしていますが自由度が高すぎるため、IaCの書き方で Chip-in の階層構造を実装する必要があります。</li>
 </ul></div></div>
+<h2 class="anchor anchorWithStickyNavbar_JmGV" id="レルム">レルム<a href="#レルム" class="hash-link" aria-label="レルム への直接リンク" title="レルム への直接リンク">​</a></h2>
+<p>Chip-in ではマルチテナント SaaS の提供を目的として、接続されるサービスをレルムと呼ばれるグループごとに論理的に分離する機能を提供します。
+API Gateway, SPN Hub などの基盤となるサービスのインスタンスはレルム間で共有しますが、配置されるサービスは異なるレルムに属するサービスとは一切通信することはできません。
+master レルムはシステムで予約されており、レルムの作成、変更、削除などの管理するためのサービスが提供されます。master レルムの定義はインベントリから読み取られるのではなくビルトインとして SPN Hub, API Gateway に組み込まれています。</p>
+<p>レルムによる分離について、以下の例外があります。</p>
+<ul>
+<li>master レルム上のゾーンはテナントのレルムに貸し出され、テナントは Chip-in ベンダからゾーンを借りてサブドメインを作ることができます</li>
+<li>テナントレルムのルーティングチェーン、仮想ホストは master レルム上に定義される主要なルーティングチェーンをライブラリとして参照できます</li>
+<li>テナントレルムは master レルム上の汎用的なマイクロサービスを利用することができます。</li>
+</ul>
+<p><img decoding="async" loading="lazy" alt="realms" src="/assets/images/realms.drawio-07789e06678835d3ca85aec50f541030.svg" class="img_SS3x"></p>
 <h2 class="anchor anchorWithStickyNavbar_JmGV" id="マイクロサービス認証局">マイクロサービス認証局<a href="#マイクロサービス認証局" class="hash-link" aria-label="マイクロサービス認証局 への直接リンク" title="マイクロサービス認証局 への直接リンク">​</a></h2>
 <p>Chip-in に参画するマイクロサービスは必ずマイクロサービス認証局の認証を得なければなりません。
 運用者はこの認証局の CP/CPS を定義する必要があります。
 マイクロサービス証明書の発行は SCEP プロトコルにより、行われます。
 SCEP サービスはCSRの内容が事前に承認された証明書の属性に一致した場合のみマイクロサービス証明書を発行します。</p>
-<h2 class="anchor anchorWithStickyNavbar_JmGV" id="インベントリサービス">インベント  リサービス<a href="#インベントリサービス" class="hash-link" aria-label="インベントリサービス への直接リンク" title="インベントリサービス への直接リンク">​</a></h2>
+<h2 class="anchor anchorWithStickyNavbar_JmGV" id="インベントリサービス">インベントリサービス<a href="#インベントリサービス" class="hash-link" aria-label="インベントリサービス への直接リンク" title="インベントリサービス への直接リンク">​</a></h2>
 <p>コアサービス内にはインベントリサービスが含まれています。インベントリサービスは S3 や etcd などの KVS をバックエンドに持ち、インベントリ Swagger ファイルで定義された Restful API を提供します。インベントリサービスには以下のものが登録されています。</p>
 <ul>
 <li>登録済みマイクロサービス証明書のリスト</li>
@@ -44,20 +55,8 @@ SCEP サービスはCSRの内容が事前に承認された証明書の属性に
 <li>マイクロサービス定義のリスト</li>
 <li>ゾーン定義（ホスト定義、サーバ証明書を含む）</li>
 </ul>
-<p>インベントリサービスはアクセス元のマイクロサービス証明書に含まれる拡張属性を使用してじ次世代アクセス制御(NBAC)を行う。NBAC は rego で記述され、opa-go などのクレートを使用して実装される。</p>
-<h2 class="anchor anchorWithStickyNavbar_JmGV" id="apigateway">API　Gateway<a href="#apigateway" class="hash-link" aria-label="API　Gateway への直接リンク" title="API　Gateway への直接リンク">​</a></h2>
-<p>API Gateway は Web アプリケーションをマイクロサービスに分割して実装するための基本的な機能を提供します。
-たとえば、WebコンテンツやAPIを提供する Web サイトを構築する際に、以下のように WAFサービス、認証サービス、認可サービス、コンテンツサービス、APIサービス、データベースサービス、アクセスログサービス、監査ログサービス、時系列データベースサービスというようにマイクロサービスに分割して提供できます。API Gateway とマイクロサービスの間およびマイクロサービス間の通信は SPN を経由して行われます。
-API Gateway はコアサービスのメインコンテナと動作します。</p>
-<img decoding="async" loading="lazy" src="https://www.plantuml.com/plantuml/svg/RP1DImCn48Rl-HL3Jte8sDglK-bIKGjsMTXA3gM7c8njS9j0CjkYud-N_OWIzFRE--ITcSmoaFHKdofMuIi1EV3cS2JGngCYuopB53aFpm4zMrMkrY24O4q9NBkBvMrzTGsFssqnOa88u7pHLrrWKAAgFKBXpLaIGevqSVvj0390MUHibnLhU9245_c-PsqIEAHkiusqXmfXi37AknBzsIWCRPDD-Sa007OYkuUUx1kGttH-LjFHfcJuIpvICkh8obb2Io65jtsiMAV-kFFl9CaN6J25apwa58O0J-wGucbSHHlwIsSTtPfJszLWWF-dpDbNUahWxNdB8WU-EngjqUxvelb3QpNNwSKmYb4KFs_6KSoYc4GnZMBEbcXrVQg-0G00" class="img_SS3x">
-<h3 class="anchor anchorWithStickyNavbar_JmGV" id="ゾーン">ゾーン<a href="#ゾーン" class="hash-link" aria-label="ゾーン への直接リンク" title="ゾーン への直接リンク">​</a></h3>
-<p>API Gateway にはDNSゾーンを登録します。ゾーンにゾーン同期サービスが登録されている場合、ゾーンの内容を API Gateway と同期します。
-また、ACME サービスが登録されている場合、 ACME DNS-01 プロトコルでサーバ証明書を取得します。</p>
-<h2 class="anchor anchorWithStickyNavbar_JmGV" id="レルム">レルム<a href="#レルム" class="hash-link" aria-label="レルム への直接リンク" title="レルム への直接リンク">​</a></h2>
-<p>Chip-in ではマルチテナント SaaS の提供を目的として、接続されるサービスをレルムと呼ばれるグループごとに論理的に完全に分離する機能を提供します。
-API Gateway, SPN Hub などの基盤となるサービスのインスタンスはレルム間で共有しますが、配置されるサービスは異なるレルムに属するサービスとは一切通信することはできません。
-master レルムはシステムで予約されており、レルムの作成、変更、削除などの管理するためのサービスが提供されます。</p>
-<h2 class="anchor anchorWithStickyNavbar_JmGV" id="spn">SPN<a href="#spn" class="hash-link" aria-label="SPN への 直接リンク" title="SPN への直接リンク">​</a></h2>
+<p>インベントリサービスはアクセス元のマイクロサービス証明書に含まれる拡張属性を使用してじ次世代アクセス制御(NBAC)を行います。NBAC は rego で記述され、opa-go などのクレートを使用して実装されます。</p>
+<h2 class="anchor anchorWithStickyNavbar_JmGV" id="spn">SPN<a href="#spn" class="hash-link" aria-label="SPN への直接リンク" title="SPN への直接リンク">​</a></h2>
 <p>SPNはAPI Gateway とマイクロサービスの間およびマイクロサービス間の通信において、高いセキュリティと配置の柔軟性を提供します。</p>
 <h3 class="anchor anchorWithStickyNavbar_JmGV" id="セキュリティ">セキュリティ<a href="#セキュリティ" class="hash-link" aria-label="セキュリティ への直接リンク" title="セキュリティ への直接リンク">​</a></h3>
 <p>一般的にはサービスはコンテナクラスタの中で通信を行い、コンテナ間の通信はそのクラスタの仮想ネットワークに閉じているため、平文での通信やIPアドレスでの特定で十分とされています。
@@ -69,9 +68,76 @@ master レルムはシステムで予約されており、レルムの作成、�
 </ul>
 <h3 class="anchor anchorWithStickyNavbar_JmGV" id="サービスディスカバリ">サービスディスカバリ<a href="#サービスディスカバリ" class="hash-link" aria-label="サービスディスカバリ への直接リンク" title="サービスディスカバリ への直接リンク">​</a></h3>
 <p>多くの高可用性システム、負荷分散システムはサービスの場所、死活を特定するために DNS や TCP Connect のポーリングを行なっています。
-しかし、ポーリングは間隔を開けて行われるため、レイテンシを避けることができません。また、失敗した時にはその原因が不明であるため、障害検知、復旧検知を難しくてしてい ます。
+しかし、ポーリングは間隔を開けて行われるため、レイテンシを避けることができません。また、失敗した時にはその原因が不明であるため、障害検知、復旧検知を難しくてしています。
 Chip-in は逆接続アーキテクチャにより、ZPSD(Zero Polling Service Discovery)を実現しています。
 サービスを実装するインスタンス側から接続するため、SPN Hub はポーリングを行わずにサービスの起動を検出します。</p>
+<h3 class="anchor anchorWithStickyNavbar_JmGV" id="spn-hub">SPN Hub<a href="#spn-hub" class="hash-link" aria-label="SPN Hub への直接リンク" title="SPN Hub への直接リンク">​</a></h3>
+<p>SPN の中心となる SPN Hub はコアサービスのサイドカーコンテナとして実装されます。</p>
+<h3 class="anchor anchorWithStickyNavbar_JmGV" id="接続方式">接続方式<a href="#接続方式" class="hash-link" aria-label="接続方式 への直接リンク" title="接続方式 への直接リンク">​</a></h3>
+<p>Chip-in では SPN Hub を中心として多数のマイクロサービス（Micro Service）をハブ状に接続する構成を取ります。
+マイクロサービスが SPN Hub に接続するために以下のいずれかの方法を取る必要があり ます。</p>
+<table><thead><tr><th>方式</th><th>説明</th></tr></thead><tbody><tr><td>直接接続方式</td><td>マイクロサービスの実装プログラムから直接サービスバスに接続する。接続には serviceConsumer モードと serviceProvider モードの2種類がある</td></tr><tr><td>エージェント方式</td><td>マイクロサービスを実装するコンテナでサイドカーとしてエージェント(Agent)を起動し、実装プログラムはエージェントとの間でTCP通信を行う。TCP通信にはエージェント側が listen する serviceConsumer モードとエージェントからアプリケーションに接続する serviceProvider モードがある。</td></tr></tbody></table>
+<h3 class="anchor anchorWithStickyNavbar_JmGV" id="クラスタマネージャ">クラスタマネージャ<a href="#クラスタマネージャ" class="hash-link" aria-label="クラスタマネージャ への直接リンク" title="クラスタマネージャ への直接リンク">​</a></h3>
+<p>Chip-in はクラスタマネージャにより、マイクロサービスインスタンスの起動・停止を行います。 SPN Hub はクラスタマネージャを経由して以下の機能を提供します。</p>
+<ul>
+<li>日次スケジュールに従って営業時間帯のみインスタンスを常駐させる</li>
+<li>サービスにアクセスがあった時点でインスタンスを起動する</li>
+</ul>
+<p>API Gateway はクラスタマネージャんを経由して以下の機能を提供します。</p>
+<ul>
+<li>トップページ表示時に関連するサービスが不在の場合は揃うまで待つソーリーページを返す。</li>
+</ul>
+<h2 class="anchor anchorWithStickyNavbar_JmGV" id="apigateway">API　Gateway<a href="#apigateway" class="hash-link" aria-label="API　Gateway への直接リンク" title="API　Gateway への直接リンク">​</a></h2>
+<p>API Gateway は Web アプリケーションをマイクロサービスに分割して実 装するための基本的な機能を提供します。
+たとえば、WebコンテンツやAPIを提供する Web サイトを構築する際に、以下のように WAFサービス、認証サービス、認可サービス、コンテンツサービス、APIサービス、データベースサービス、アクセスログサービス、監査ログサービス、時系列データベースサービスというようにマイクロサービスに分割して提供できます。API Gateway とマイクロサービスの間およびマイクロサービス間の通信は SPN を経由して行われます。
+API Gateway はコアサービスのメインコンテナと動作します。</p>
+<img decoding="async" loading="lazy" src="https://www.plantuml.com/plantuml/svg/RP1DImCn48Rl-HL3Jte8sDglK-bIKGjsMTXA3gM7c8njS9j0CjkYud-N_OWIzFRE--ITcSmoaFHKdofMuIi1EV3cS2JGngCYuopB53aFpm4zMrMkrY24O4q9NBkBvMrzTGsFssqnOa88u7pHLrrWKAAgFKBXpLaIGevqSVvj0390MUHibnLhU9245_c-PsqIEAHkiusqXmfXi37AknBzsIWCRPDD-Sa007OYkuUUx1kGttH-LjFHfcJuIpvICkh8obb2Io65jtsiMAV-kFFl9CaN6J25apwa58O0J-wGucbSHHlwIsSTtPfJszLWWF-dpDbNUahWxNdB8WU-EngjqUxvelb3QpNNwSKmYb4KFs_6KSoYc4GnZMBEbcXrVQg-0G00" class="img_SS3x">
+<h3 class="anchor anchorWithStickyNavbar_JmGV" id="ゾーン">ゾーン<a href="#ゾーン" class="hash-link" aria-label="ゾーン への直接リンク" title="ゾーン への直接リンク">​</a></h3>
+<p>API Gateway にはDNSゾーンを登録します。ゾーンにゾーン同期サービスが登録されている場合、ゾーンの内容を API Gateway と同期します。
+また、ACME サービスが登録されている場合、 ACME DNS-01 プロトコルでサーバ証明書を取得します。
+master ゾーンはシステムで予約されており、master レルムのサービスを提供するのに用いられます。
+また、レルムのユーザがドメインを持たない場合、 master ゾーンの下のサブドメインを使用することができます。</p>
+<h3 class="anchor anchorWithStickyNavbar_JmGV" id="bff">BFF<a href="#bff" class="hash-link" aria-label="BFF への直接リンク" title="BFF への直接リンク">​</a></h3>
+<p>BFF(Backend for Frontend)機能はフロントエンドからの API アクセスに対する認証機能を提供します。
+Web プロキシのコンフィグレーションでロケーション(FQDN+パスのパターンで特定)を指定してBFFを追加できます。
+BFFは以下の機能を提供します。</p>
+<ul>
+<li>Open ID Connect プロトコルで IdP を呼び出し、IDトークンとアクセストークンを取得</li>
+<li>IDトークンとアクセストークンをセッション情報として構成情報データベースに保存</li>
+<li>セッションIDをセキュアなCookie（HttpOnly, Secure, SameSite=Strict）を発行</li>
+<li>単純なリクエストを拒否（400を返す）</li>
+<li>必要に応じて HTTPレスポンスに CORS 関係のヘッダを追加</li>
+<li>必要に応じて HTTPレスポンスに CSPヘッダを追加</li>
+<li>必要に応じて HTTPレスポンスに X-Frame-Options ヘッダを追加</li>
+<li>必要に応じてセッション情報の内容を取得するAPIを提供</li>
+<li>必要に応じて指定されたパスパターンに一致するGETリクエストに対して IdP へのリダイレクトを返す</li>
+<li>必要に応じてセッション情報の一覧取得（自分の接続中のセッションの確認）・削除（管理者による強制ログアウト）を別のBFFを経由して行える API を提供</li>
+</ul>
+<div class="theme-admonition theme-admonition-info admonition_WCGJ alert alert--info"><div class="admonitionHeading_GCBg"><span class="admonitionIcon_L39b"><svg viewBox="0 0 14 16"><path fill-rule="evenodd" d="M7 2.3c3.14 0 5.7 2.56 5.7 5.7s-2.56 5.7-5.7 5.7A5.71 5.71 0 0 1 1.3 8c0-3.14 2.56-5.7 5.7-5.7zM7 1C3.14 1 0 4.14 0 8s3.14 7 7 7 7-3.14 7-7-3.14-7-7-7zm1 3H6v5h2V4zm0 6H6v2h2v-2z"></path></svg></span>備考</div><div class="admonitionContent_pbrs"><p>CSRF防御について CSRF トークンを発行するという機能を追加することも可能であるが、セキュアなCookieの発行と単純なリクエストの拒否で十分であると考えています。</p></div></div>
+<h4 class="anchor anchorWithStickyNavbar_JmGV" id="2フェーズセッション管理">2フェーズセッション管理<a href="#2フェーズセッション管理" class="hash-link" aria-label="2フェーズセッション管理 への直接リンク" title="2フェーズセッション管理 への直接リンク">​</a></h4>
+<p>ユーザの認証前と認証後の両方で串刺ししてセッションを管理できるようにします。</p>
+<h5 class="anchor anchorWithStickyNavbar_JmGV" id="認証前セッション">認証前セッション<a href="#認証前セッション" class="hash-link" aria-label="認証前セッション への直接リンク" title="認証前セッション への直接リンク">​</a></h5>
+<p>CHIPIN_SESSION Cookie でセッションを識別しますが、攻撃などで負荷がかからないようにサーバ側での管理は行わず JWT の発行にとどめます。認証前セッションのセッションIDをログに記録することによって、以下のような場合でもアクセスを串刺しにできます。</p>
+<ul>
+<li>ブラウザを開いたままログアウトして別のユーザでログインしなおした場合</li>
+<li>SP にアクセスして認証サーバにリダイレクトされた場合</li>
+</ul>
+<p>また、ドメイン内でセッションを共有できます。</p>
+<h4 class="anchor anchorWithStickyNavbar_JmGV" id="認証済みセッション">認証済みセッション<a href="#認証済みセッション" class="hash-link" aria-label="認証済みセッション への直接リンク" title="認証済みセッション への直接リンク">​</a></h4>
+<p>認証に成功すると、認証前セッションで発行されたセッションIDをキーにしてセッションオブジェクトをメモリ上に作成  し、そこにユーザIDなど認証で得られたユーザの属性情報を保持します。</p>
+<h3 class="anchor anchorWithStickyNavbar_JmGV" id="m2m通信">M2M通信<a href="#m2m通信" class="hash-link" aria-label="M2M通信 への直接リンク" title="M2M通信 への直接リンク">​</a></h3>
+<p>外部システムが HTTP の API でアクセスしてくる場合のセッション管理について、 Set-Cookie が効かないおそれがあります。このようなマシン対マシン（M2M）通信では、 OAuth 2.0 クライアントクレデンシャルズグラント (Client Credentials Grant) という認証フローが使用されます。M2M 通信と BFF とはパスなどによって排他的に適用されます。
+これは、ユーザーの介在なしに、アプリケーション自体が認証を行い、APIアクセスのためのトークンを取得するための仕組みです。以下に認証フローのステップを示します。</p>
+<h4 class="anchor anchorWithStickyNavbar_JmGV" id="1-事前登録">1. 事前登録<a href="#1-事前登録" class="hash-link" aria-label="1. 事前登録 への直接リンク" title="1. 事前登録 への直接リンク">​</a></h4>
+<p>APIを利用したい外部システム（クライアント）は、事前にあなたの認証サーバー（IdP）に登録されます。登録後、そのシステム専用の Client ID と Client Secret が発行されます。これらはシステムのIDとパスワードのようなものです。</p>
+<h4 class="anchor anchorWithStickyNavbar_JmGV" id="2-トークンの要求">2. トークンの要求<a href="#2-トークンの要求" class="hash-link" aria-label="2. トークンの要求 への直接リンク" title="2. トークンの要求 への直接リンク">​</a></h4>
+<p>外部システムは、自身の Client ID と Client Secret を使って、認証サーバーのトークンエンドポイントに直接APIリクエストを送信し、アクセストークンを要求します 。</p>
+<h4 class="anchor anchorWithStickyNavbar_JmGV" id="3-トークンの取得">3. トークンの取得<a href="#3-トークンの取得" class="hash-link" aria-label="3. トークンの取得 への直接リンク" title="3. トークンの取得 への直接リンク">​</a></h4>
+<p>認証サーバーは送られてきた Client ID と Client Secret を検証し、正当であれば、そのシステム（クライアント）の権限を表すアクセストークンを発行します。このトークンは特定のユーザーに紐づくものではなく、システム自体に紐づきます。</p>
+<h4 class="anchor anchorWithStickyNavbar_JmGV" id="4-apiの呼び出し">4. APIの呼び出し<a href="#4-apiの呼び出し" class="hash-link" aria-label="4. APIの呼び出し への直接リンク" title="4. APIの呼び出し への直接リンク">​</a></h4>
+<p>外部システムは、取得したアクセストークンを Authorization: Bearer アクセストークン ヘッダーに含めて、保護されたAPIを直接呼び出します。</p>
+<h4 class="anchor anchorWithStickyNavbar_JmGV" id="5-apiでの検証">5. APIでの検証<a href="#5-apiでの検証" class="hash-link" aria-label="5. APIでの検証 への直接リンク" title="5. APIでの検証 への直接リンク">​</a></h4>
+<p>API Gateway は、リクエストで受け取ったアクセストークンを検証し、有効であればリクエストを処理します。</p>
 <h3 class="anchor anchorWithStickyNavbar_JmGV" id="リクエストコンテキスト">リクエストコンテキスト<a href="#リクエストコンテキスト" class="hash-link" aria-label="リクエストコンテキスト への直接リンク" title="リクエストコンテキスト への直接リンク">​</a></h3>
 <p>（未）</p>
 <h3 class="anchor anchorWithStickyNavbar_JmGV" id="ルーティング機能">ルーティング機能<a href="#ルーティング機能" class="hash-link" aria-label="ルーティング機能 への直接リンク" title="ルーティング機能 への直接リンク">​</a></h3>
@@ -87,45 +153,21 @@ Chip-in は逆接続アーキテクチャにより、ZPSD(Zero Polling Service D
 <h3 class="anchor anchorWithStickyNavbar_JmGV" id="エラーレスポンス調整機能">エラーレスポンス調整機能<a href="#エラーレスポンス調整機能" class="hash-link" aria-label="エラーレスポンス調整機能 への直接リンク" title="エラーレスポンス調整機能 への直接リンク">​</a></h3>
 <p>API Gateway がブラウザにエラーを返す場合、そのボディ部の内容については以下のような課題がある。</p>
 <ul>
-<li>  トップページのアクセスにおいて API Gateway の内部で発生する 400番台、500番台のエラーについてアプリケーションの Web UI のデザインにあわせた HTML を表示したい</li>
+<li>トップページのアクセスにおいて API Gateway の内部で発生する 400番台、500番台のエラーについてアプリケーションの Web UI のデザインにあわせた HTML を表示したい</li>
 <li>トップページ以外のアクセスにおいて HTML を返してもエンドユーザに表示されるわけではないので無意味である</li>
 <li>API のアクセスにおいて、 API Gateway の内部で 400番台、500番台のエラが発生した場合、 Accept ヘッダーにない Content-Type などAPIの呼び出し側が想定していないものを返すのはアプリケーションのエラー処理を複雑にする（間のリバースプロキシが入っている場合のエラー処理を追加しなければならない）
 これらの問題に対応するために</li>
 </ul>
+<h3 class="anchor anchorWithStickyNavbar_JmGV" id="ロボット拒否">ロボット拒否<a href="#ロボット拒否" class="hash-link" aria-label="ロボット拒否 への直接リンク" title="ロボット拒否 への直接リンク">​</a></h3>
+<p>ビルトインチェーンでは検索エンジンのロボットを拒否する機能を提供する。</p>
+<h3 class="anchor anchorWithStickyNavbar_JmGV" id="コンテントセキュリティポリシー管理">コンテントセキュリティポリシー管理<a href="#コンテントセキュリティポリシー管理" class="hash-link" aria-label="コンテントセキュリティポリシー管理 への直接リンク" title="コンテントセキュリティポリシー管理 への直接リンク">​</a></h3>
+<p>CSPヘッダーを付与する</p>
+<h4 class="anchor anchorWithStickyNavbar_JmGV" id="csp違反記録サービス">CSP違反記録サービス<a href="#csp違反記録サービス" class="hash-link" aria-label="CSP違反記録サービス への直接リンク" title="CSP違反記録サービス への直接リンク">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_JmGV" id="iframe-管理">iframe 管理<a href="#iframe-管理" class="hash-link" aria-label="iframe 管理 への直接リンク" title="iframe 管理 への直接リンク">​</a></h4>
+<p>X-Frame-Options ヘッダーを付与する</p>
 <h3 class="anchor anchorWithStickyNavbar_JmGV" id="監査ログ記録サービス">監査ログ記録サービス<a href="#監査ログ記録サービス" class="hash-link" aria-label="監査ログ記録サービス への直接リンク" title="監査ログ記録サービス への直接リンク">​</a></h3>
-<p><a href="https://github.com/procube-open/pino-transmit-http" target="_blank" rel="noopener noreferrer">pino HTTP送信モジュール</a>を推奨。CSPヘッダ対応も同時に行う。</p>
-<h3 class="anchor anchorWithStickyNavbar_JmGV" id="認証サービス">認証サービス<a href="#認証サービス" class="hash-link" aria-label="認証サービス への直接リンク" title="認証サービス への直接リンク">​</a></h3>
-<p>BFF(Backend for Frontend)機能はフロントエンドからの API アクセスに対する認証機能を提供します。
-Web プロキシのコンフィグレーションでロケーション(FQDN+パスのパターンで特定)を指定してBFFを追加できます。
-BFFは以下の機能を提供します。</p>
-<ul>
-<li>Open ID Connect プロトコルで IdP を呼び出し、IDトークンとアクセストークンを取 得</li>
-<li>IDトークンとアクセストークンをセッション情報として構成情報データベースに保存</li>
-<li>セッションIDをセキュアなCookie（HttpOnly, Secure, SameSite=Strict）を発行</li>
-<li>単純なリクエストを拒否（400を返す）</li>
-<li>必要に応じて HTTPレスポンスに CORS 関係のヘッダを追加</li>
-<li>必要に応じてセッション情報の内容を取得するAPIを提供</li>
-<li>必要に応じて指定されたパスパターンに一致するGETリクエストに対して IdP へのリダイレクトを返す</li>
-<li>必要に応じてセッション情報の一覧取得（自分の接続中のセッションの確認）・削除（管理者による強制ログアウト）を別のBFFを経由して行える API を提供</li>
-</ul>
-<div class="theme-admonition theme-admonition-info admonition_WCGJ alert alert--info"><div class="admonitionHeading_GCBg"><span class="admonitionIcon_L39b"><svg viewBox="0 0 14 16"><path fill-rule="evenodd" d="M7 2.3c3.14 0 5.7 2.56 5.7 5.7s-2.56 5.7-5.7 5.7A5.71 5.71 0 0 1 1.3 8c0-3.14 2.56-5.7 5.7-5.7zM7 1C3.14 1 0 4.14 0 8s3.14 7 7 7 7-3.14 7-7-3.14-7-7-7zm1 3H6v5h2V4zm0 6H6v2h2v-2z"></path></svg></span>備考</div><div class="admonitionContent_pbrs"><p>CSRF防御について CSRFトークンを発行するという機能を追加することも可能であるが、セキュアなCookieの発行と単純なリクエストの拒否で十分であると考えています。</p></div></div>
-<h3 class="anchor anchorWithStickyNavbar_JmGV" id="spn-hub">SPN Hub<a href="#spn-hub" class="hash-link" aria-label="SPN Hub への直接リンク" title="SPN Hub への直接リンク">​</a></h3>
-<p>SPN の中心となる SPN Hub はコアサービスのサイドカーコンテナとして実装されます。</p>
-<h2 class="anchor anchorWithStickyNavbar_JmGV" id="接続方式">接続方式<a href="#接続方式" class="hash-link" aria-label="接続方式 への直接リンク" title="接続方式 への直接 リンク">​</a></h2>
-<p>Chip-in では SPN Hub を中心として多数のマイクロサービス（Micro Service）をハブ状に接続する構成を取ります。
-マイクロサービスが SPN Hub に接続するために以下のいずれかの方法を取る必要があります。</p>
-<table><thead><tr><th>方式</th><th>説明</th></tr></thead><tbody><tr><td>直接接続方式</td><td>マイクロサービスの実装プログラムから直接サービスバスに接続する。接続には serviceConsumer モードと serviceProvider モードの2種類がある</td></tr><tr><td>エージェント方式</td><td>マイクロサービスを実装するコンテナでサイドカーとしてエージェント(Agent)を起動し、実装プログラムはエージェントとの間でTCP通信を行う。TCP通信にはエージェント側が listen する serviceConsumer モードとエージェントからアプリケーションに接続する serviceProvider モードがある。</td></tr></tbody></table>
-<h3 class="anchor anchorWithStickyNavbar_JmGV" id="クラスタマネージャ">クラスタマネージャ<a href="#クラスタマネージャ" class="hash-link" aria-label="クラスタマネージャ への直接リンク" title="クラスタマネージャ への直接リンク">​</a></h3>
-<p>Chip-in はクラスタマネージャにより、マイクロサービスインスタンスの起動・停止を行います。 SPN Hub はクラスタマネージャを経由して以下の機能を提供します。</p>
-<ul>
-<li>日次スケジュールに従って営業時間帯のみインスタンスを常駐させる</li>
-<li>サービスにアクセスがあった時点でインスタンスを起動する</li>
-</ul>
-<p>API Gateway はクラスタマネージャんを経由して以下の機能を提供します。</p>
-<ul>
-<li>トップページ表示時に関連するサービスが不在の場合は揃うまで待つソーリーページを返す。</li>
-</ul>
-<h3 class="anchor anchorWithStickyNavbar_JmGV" id="wafサービス">WAFサービス<a href="#wafサービス" class="hash-link" aria-label="WAFサービス への直接リンク" title="WAFサービス への直接リンク">​</a></h3>
-<p><a href="https://modsecurity.org/" target="_blank" rel="noopener noreferrer">ModSerurity</a>にSPNエージェントをサイドカーとして付与して提供します。</p></div></article><nav class="pagination-nav docusaurus-mt-lg" aria-label="ドキュメントページ"><a class="pagination-nav__link pagination-nav__link--prev" href="/docs/devDesign/index"><div class="pagination-nav__sublabel">前へ</div><div class="pagination-nav__label">概要</div></a></nav></div></div><div class="col col--3"><div class="tableOfContents_XG6w thin-scrollbar theme-doc-toc-desktop"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#階層構造" class="table-of-contents__link toc-highlight">階層構造</a><ul><li><a href="#クラスタ" class="table-of-contents__link toc-highlight">クラスタ</a></li><li><a href="#サービスとインスタンス" class="table-of-contents__link toc-highlight">サービスとインスタンス</a></li><li><a href="#コンテナ" class="table-of-contents__link toc-highlight">コンテナ</a></li><li><a href="#iaas-上の用語" class="table-of-contents__link toc-highlight">IaaS 上の用語</a></li></ul></li><li><a href="#マイクロサービス認証局" class="table-of-contents__link toc-highlight">マイクロサービス認証局</a></li><li><a href="#インベントリサービス" class="table-of-contents__link toc-highlight">インベントリサービス</a></li><li><a href="#apigateway" class="table-of-contents__link toc-highlight">API　Gateway</a><ul><li><a href="#ゾーン" class="table-of-contents__link toc-highlight">ゾーン</a></li></ul></li><li><a href="#レルム" class="table-of-contents__link toc-highlight">レルム</a></li><li><a href="#spn" class="table-of-contents__link toc-highlight">SPN</a><ul><li><a href="#セキュリティ" class="table-of-contents__link toc-highlight">セキュリティ</a></li><li><a href="#サービスディスカバリ" class="table-of-contents__link toc-highlight">サービスディスカバリ</a></li><li><a href="#リクエストコンテキスト" class="table-of-contents__link toc-highlight">リクエストコンテキスト</a></li><li><a href="#ルーティング機能" class="table-of-contents__link toc-highlight">ルーティング機能</a></li><li><a href="#冗長負荷分散機能" class="table-of-contents__link toc-highlight">冗長負荷分散機能</a></li><li><a href="#エラーレスポンス調整機能" class="table-of-contents__link toc-highlight">エラーレスポンス調整機能</a></li><li><a href="#監査ログ記録サービス" class="table-of-contents__link toc-highlight">監査ログ記録サービス</a></li><li><a href="#認証サービス" class="table-of-contents__link toc-highlight">認証サービス</a></li><li><a href="#spn-hub" class="table-of-contents__link toc-highlight">SPN Hub</a></li></ul></li><li><a href="#接続方式" class="table-of-contents__link toc-highlight">接続方式</a><ul><li><a href="#クラスタマネージャ" class="table-of-contents__link toc-highlight">クラスタマネージャ</a></li><li><a href="#wafサービス" class="table-of-contents__link toc-highlight">WAFサービス</a></li></ul></li></ul></div></div></div></div></main></div></div></div></div>
+<p><a href="https://github.com/procube-open/pino-transmit-http" target="_blank" rel="noopener noreferrer">pino HTTP送信モジュール</a>を推奨。</p>
+<h3 class="anchor anchorWithStickyNavbar_JmGV" id="wafサービス">WAFサービス<a href="#wafサービス" class="hash-link" aria-label="WAFサービス への直接リンク" title="WAF  サービス への直接リンク">​</a></h3>
+<p><a href="https://modsecurity.org/" target="_blank" rel="noopener noreferrer">ModSerurity</a>にSPNエージェントをサイドカーとして付与して提供します。</p></div></article><nav class="pagination-nav docusaurus-mt-lg" aria-label="ドキュメントページ"><a class="pagination-nav__link pagination-nav__link--prev" href="/docs/devDesign/index"><div class="pagination-nav__sublabel">前へ</div><div class="pagination-nav__label">概要</div></a></nav></div></div><div class="col col--3"><div class="tableOfContents_XG6w thin-scrollbar theme-doc-toc-desktop"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#階層構造" class="table-of-contents__link toc-highlight">階層構造</a><ul><li><a href="#クラスタ" class="table-of-contents__link toc-highlight">クラスタ</a></li><li><a href="#サービスとインスタンス" class="table-of-contents__link toc-highlight">サービスとインスタンス</a></li><li><a href="#コンテナ" class="table-of-contents__link toc-highlight">コンテナ</a></li><li><a href="#iaas-上の用語" class="table-of-contents__link toc-highlight">IaaS 上の用語</a></li></ul></li><li><a href="#レルム" class="table-of-contents__link toc-highlight">レルム</a></li><li><a href="#マイクロサービス認証局" class="table-of-contents__link toc-highlight">マイクロサービス認証局</a></li><li><a href="#インベントリサービス" class="table-of-contents__link toc-highlight">インベントリサービス</a></li><li><a href="#spn" class="table-of-contents__link toc-highlight">SPN</a><ul><li><a href="#セキュリティ" class="table-of-contents__link toc-highlight">セキュリティ</a></li><li><a href="#サービスディスカバリ" class="table-of-contents__link toc-highlight">サービスディスカバリ</a></li><li><a href="#spn-hub" class="table-of-contents__link toc-highlight">SPN Hub</a></li><li><a href="#接続方式" class="table-of-contents__link toc-highlight">接続方式</a></li><li><a href="#クラスタマネージャ" class="table-of-contents__link toc-highlight">クラスタマネージャ</a></li></ul></li><li><a href="#apigateway" class="table-of-contents__link toc-highlight">API　Gateway</a><ul><li><a href="#ゾーン" class="table-of-contents__link toc-highlight">ゾーン</a></li><li><a href="#bff" class="table-of-contents__link toc-highlight">BFF</a></li><li><a href="#m2m通信" class="table-of-contents__link toc-highlight">M2M通信</a></li><li><a href="#リクエストコンテキスト" class="table-of-contents__link toc-highlight">リクエストコンテキスト</a></li><li><a href="#ルーティング機能" class="table-of-contents__link toc-highlight">ルーティング機能</a></li><li><a href="#冗長負荷分散機能" class="table-of-contents__link toc-highlight">冗長負荷分散機能</a></li><li><a href="#エラーレスポンス調整機能" class="table-of-contents__link toc-highlight">エラーレスポンス調整機能</a></li><li><a href="#ロボット拒否" class="table-of-contents__link toc-highlight">ロボット拒否</a></li><li><a href="#コンテントセキュリティポリシー管理" class="table-of-contents__link toc-highlight">コンテントセキュリティポリシー管理</a></li><li><a href="#監査ログ記録サービス" class="table-of-contents__link toc-highlight">監査ログ記録サービス</a></li><li><a href="#wafサービス" class="table-of-contents__link toc-highlight">WAFサービス</a></li></ul></li></ul></div></div></div></div></main></div></div></div></div>
 </body>
 </html>
