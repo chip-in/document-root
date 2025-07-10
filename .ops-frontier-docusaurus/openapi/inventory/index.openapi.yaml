@@ -357,8 +357,212 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+  
+  /realms/{realm}/zones/{zone}/subdomains:
+    put:
+      tags:
+        - subdomain
+      summary: Update an existing subdomain.
+      description: Update an existing subdomain by subdomain name.
+      operationId: updateSubdomain
+      parameters:
+        - name: realm
+          in: path
+          description: relam which zone belogs to
+          required: true
+          schema:
+            type: string
+        - name: zone
+          in: path
+          description: Name of zone which subdomain belogs to
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Update an existent subdomain in the SPN
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Subdomain'
+        required: true
+      responses:
+        '200':
+          description: Successful operation, return the new contents.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subdomain'
+        '400':
+          description: Invalid Name supplied
+        '404':
+          description: Virtual Host not found
+        '422':
+          description: Validation exception
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    post:
+      tags:
+        - subdomain
+      description: Add a new subdomain to the zone.
+      operationId: addSubdomain
+      parameters:
+        - name: realm
+          in: path
+          description: relam which zone belogs to
+          required: true
+          schema:
+            type: string
+        - name: zone
+          in: path
+          description: Name of zone which subdomain belogs to
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Create a new subdomain in the zone
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Subdomain'
+        required: true
+      responses:
+        '200':
+          description: Successful operation, return the new contents.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subdomain'
+        '400':
+          description: Invalid input
+        '422':
+          description: Validation exception
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    get:
+      tags:
+        - subdomain
+      description: Finds Virtual Hosts
+      operationId: listSubdomains
+      parameters:
+        - name: realm
+          in: path
+          description: relam which zone belogs to
+          required: true
+          schema:
+            type: string
+        - name: zone
+          in: path
+          description: Name of zone which subdomain belogs to
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Subdomain'
+        '400':
+          description: Invalid status value
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  
+  /realms/{realm}/zones/{zone}/subdomains/{subdomain}:
+    get:
+      tags:
+        - subdomain
+      summary: Find subdomain by name.
+      description: Returns a single subdomain.
+      operationId: getSubdomainByName
+      parameters:
+        - name: realm
+          in: path
+          description: relam which zone belogs to
+          required: true
+          schema:
+            type: string
+        - name: zone
+          in: path
+          description: Name of zone which subdomain belogs to
+          required: true
+          schema:
+            type: string
+        - name: subdomain
+          in: path
+          description: Name of subdomain to return
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subdomain'
+        '400':
+          description: Invalid Name supplied
+        '404':
+          description: Virtual Host not found
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    delete:
+      tags:
+        - subdomain
+      summary: Deletes a subdomain.
+      description: Delete a subdomain.
+      operationId: deleteSubdomain
+      parameters:
+        - name: realm
+          in: path
+          description: relam which zone belogs to
+          required: true
+          schema:
+            type: string
+        - name: zone
+          in: path
+          description: Name of zone which subdomain belogs to
+          required: true
+          schema:
+            type: string
+        - name: subdomain
+          in: path
+          description: Virtual Host URN to delete
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Virtual Host deleted
+        '400':
+          description: Invalid Name value
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
 
-  /realms/{realm}/zones/{zone}/virtual-hosts:
+  /realms/{realm}/virtual-hosts:
     put:
       tags:
         - virtual-host
@@ -369,12 +573,6 @@ paths:
         - name: realm
           in: path
           description: relam which zone belogs to
-          required: true
-          schema:
-            type: string
-        - name: zone
-          in: path
-          description: Name of zone which virtual host belogs to
           required: true
           schema:
             type: string
@@ -416,12 +614,6 @@ paths:
           required: true
           schema:
             type: string
-        - name: zone
-          in: path
-          description: Name of zone which virtual host belogs to
-          required: true
-          schema:
-            type: string
       requestBody:
         description: Create a new virtual host in the zone
         content:
@@ -458,12 +650,6 @@ paths:
           required: true
           schema:
             type: string
-        - name: zone
-          in: path
-          description: Name of zone which virtual host belogs to
-          required: true
-          schema:
-            type: string
       responses:
         '200':
           description: successful operation
@@ -481,7 +667,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  /realms/{realm}/zones/{zone}/virtual-hosts/{virtualHost}:
+  
+  /realms/{realm}/virtual-hosts/{virtualHost}:
     get:
       tags:
         - virtual-host
@@ -492,12 +679,6 @@ paths:
         - name: realm
           in: path
           description: relam which zone belogs to
-          required: true
-          schema:
-            type: string
-        - name: zone
-          in: path
-          description: Name of zone which virtual host belogs to
           required: true
           schema:
             type: string
@@ -534,12 +715,6 @@ paths:
         - name: realm
           in: path
           description: relam which zone belogs to
-          required: true
-          schema:
-            type: string
-        - name: zone
-          in: path
-          description: Name of zone which virtual host belogs to
           required: true
           schema:
             type: string
@@ -1077,12 +1252,19 @@ components:
         - title
         - cacert
         - disabled
+        - signingKey
+      description: |-
+        レルムは、SPN内の論理的なグループであり、ゾーンやサブドメイン、仮想ホストなどのリソースを分離して管理するためのコンテナです。
+        各レルムは、独自の設定や管理者を持ち、セキュリティやアクセス制御のために使用されます。
       properties:
         name:
           type: string
+          pattern: '^[a-z0-9][a-z0-9-]*$'
           description: |-
             レルムの名前。URN の一部として使用される。
-            文字列は小文字英字、数字、ハイフン、アンダースコアのみを含むことができる。
+            文字列は小文字英字、数字、ハイフンのみを含むことができる。
+            ただし、ハイフンで始まることはできない。
+            名称 "master" は予約されており、使用できない。
           example: example-realm
         title:
           type: string
@@ -1101,6 +1283,18 @@ components:
             MIIDXTCCAkWgAwIBAgIJAL5z1Z2k5b4wMA0GCSqGSIb3DQEBCwUAMEUxCzAJBgNV
             ...
             -----END CERTIFICATE-----
+        signingKey:
+          type: string
+          minLength: 24
+          description: |-
+            realm 配下のAPI Gateway でセッショントークンの署名に使用されるパスワード。
+            使用できる文字は英字、数字、ハイフン、アンダースコアのみである。
+          example: wUAMEUxCzAJBg1m4uS38-2__
+        sessionTimeout:
+          type: integer
+          description: |-
+            セッショントークンの有効期限。単位は秒で、デフォルトは 2592000  秒 (30日)。
+          example: 2592000 
         administrators:
           type: array
           items:
@@ -1123,8 +1317,15 @@ components:
             true の場合、レルムは無効化されており、関連するリソースへのアクセスが制限される。
             false の場合、レルムは有効であり、通常の操作が可能である。
           example: false
+      additionalProperties: false
+
     Zone:
       type: object
+      description: |-
+        ゾーンは、SPN内のDNSレコードを管理するための論理的なグループであり、仮想ホストのFQDNを収容できる。また、サブドメインを作成し、ゾーン内のFQDNをグループ化することができる。
+        特に master レルムのゾーンは、他のレルムにサブドメインを貸し出すことができる。
+        各ゾーンは、特定のレルムに属し、そのレルム内で一意の名前を持つ。
+        ゾーンは、DNSプロバイダやACME証明書プロバイダと連携して、DNSレコードやSSL/TLS証明書の管理を行う。
       required:
         - zone
         - title
@@ -1132,6 +1333,7 @@ components:
       properties:
         zone:
           type: string
+          format: hostname
           description: |-
             ゾーンの名前。FQDN のサフィックスとして使用される。
             文字列は小文字英字、数字、ハイフン、ピリオドのみを含むことができる。
@@ -1146,6 +1348,8 @@ components:
           example: CMSシステムの検証環境用のゾーンです。
         realm:
           type: string
+          readOnly: true
+          format: urn
           description: |-
             ゾーンが属するレルムの名前。
         dnsProvider:
@@ -1158,6 +1362,71 @@ components:
           description: |-
             ゾーンのSSL/TLS証明書を自動的に取得するためのACME証明書プロバイダのURL
           example: https://acme-v02.api.letsencrypt.org/directory
+      additionalProperties: false
+
+    Subdomain:
+      type: object
+      description: |-
+        サブドメインは、ゾーン内で定義されるサブドメインのリソースであり、仮想ホストをグループ化して収容することができる。
+        各サブドメインは、特定のゾーンに属し、そのゾーン内で一意の名前を持つ。
+        master レルムのサブドメインは、他のレルムにサブドメインを貸し出すことができる。
+      required:
+        - name
+        - title
+      properties:
+        name:
+          type: string
+          pattern: '^[a-z0-9][a-z0-9-]*$'
+          description: |-
+            サブドメインの名前。ゾーン名と結合して FQDN を得ることができる。
+            文字列は小文字英字、数字、ハイフンのみを含むことができる。
+            ただし、先頭がハイフンであってはならない。
+            たとえば、 stg というサブドメイン名でゾーンの名前が example.com の場合、
+            stg.example.com というサブドメインを構成し、www.stg.example.com, login.stg.example.com  というような
+            FQDN の仮想ホストを収容することができる。
+          example: stg
+        fqdn:
+          type: string
+          readOnly: true
+          format: hostname
+          description: |-
+            サブドメインの完全修飾ドメイン名(FQDN)。
+            たとえば、 stg.example.com のように、ゾーン名と結合して得られる。
+            このFQDNは、サブドメイン内の仮想ホストのFQDNのベースとなる。
+          example: stg.example.com
+        zone:
+          type: string
+          readOnly: true
+          format: urn
+          description: |-
+            このサブドメインが属するゾーンのURN。
+            ゾーンは、サブドメインのFQDNのサフィックスとして使用される。
+            たとえば、 stg.example.com の場合、ゾーンは example.com となる。
+          example: urn:chip-in:zone:example-realm:example.com
+        title:
+          type: string
+          description: サブドメインの名称です。
+          example: CMSシステム
+        description:
+          type: string
+          description: サブドメインの説明文です。
+          example: CMSシステムのWebUI を提供するサブドメインです。
+        destinationRealm:
+          type: string
+          description: |-
+            このサブドメインの貸出先レルムののURN。
+          example: urn:chip-in:realm:example-realm
+        shareCookie:
+          type: boolean
+          default: false
+          description: |-
+            このフラグが指定されると、配下の仮想ホストの間でセッション Cookie が共有される。
+            すなわち、仮想ホストから発行せれるセッション Cookie の domain 属性にはサブドメインのFQDNが指定される。
+            デフォルトでは Cookie に Domain 属性は設定されない。
+            サブドメイン配下の仮想ホストのアクセスログ間でセッションによる串刺しが可能になり、シングルサインオンも実装される。
+            OIDCやSAMLによるシングルサインオンとは異なり、認証サーバへのリダイレクトは不要となる。
+          example: true
+      additionalProperties: false
 
     VirtualHost:
       type: object
@@ -1169,15 +1438,33 @@ components:
         name:
           type: string
           description: |-
-            仮想ホストの名前。所属するゾーンの名前と結合して FQDN を得ることができる。また、ピリオドを含めてサブドメイン化することもできる。
-            たとえば、 www.stg という仮想ホスト名でゾーンの名前が example.com の場合、FQDN は www.stg.example.com となる。
+            仮想ホストの名前。所属するゾーンや指定したサブドメインの名前と結合して FQDN を得ることができる。
+            たとえば、 www という仮想ホスト名でゾーンの名前が example.com の場合、FQDN は www.example.com となる。
           example: www.stg
         title:
           type: string
+          description: 仮想ホストの名称。
           example: CMSシステム
         description:
           type: string
+          description: 仮想ホストの説明文。
           example: CMSシステムのWebUI を提供する仮想ホストです。
+        realm:
+          type: string
+          readOnly: true
+          format: urn
+          description: |-
+            この仮想ホストが属するレルムのURN。
+          example: urn:chip-in:realm:example-realm
+        subdomain:
+          type: string
+          description: |-
+            この仮想ホストが属するサブドメインのURN。
+            仮想ホストのFQDNは、仮想ホストの名前とサブドメインの名前を結合して得られる。
+            たとえば、 www という仮想ホスト名でサブドメインの FQDN が stg.example.com の場合、FQDN は www.stg.example.com となる。
+            サブドメインは自身のレルムに属するものかサブドメインの貸出先に自身のレルムが指定されているものでなくてはならない。
+            サブドメインが指定されていない場合は、仮想ホストはゾーン直下のFQDNを持つことになる。
+          example: urn:chip-in:subdomain:example-realm:stg
         routingChain:
           type: string
           description: |-
@@ -1213,14 +1500,13 @@ components:
             true の場合、仮想ホストは無効化されており、仮想ホストは削除され、アクセスは拒否される（TLSの場合、SSL_ERROR_HANDSHAKE_FAILURE を返し、平文の場合、400 Bad Request が返す）。
             false の場合、仮想ホストは有効であり、アクセスが可能である。
           example: false
+      additionalProperties: false
 
     RoutingChain:
       type: object
       required:
         - name
-        - urn
         - title
-        - realm
       properties:
         name:
           type: string
@@ -1228,6 +1514,13 @@ components:
             ルーティングチェーンの名前。URN の一部として使用される。
             文字列は小文字英字、数字、ハイフン、アンダースコアのみを含むことができる。
           example: cms-chain
+        realm:
+          type: string
+          readOnly: true
+          format: urn
+          description: |-
+            ルーティングチェインが属するレルムの名前。
+          example: urn:chip-in:realm:example-realm
         urn:
           type: string
           readOnly: true
@@ -1264,6 +1557,7 @@ components:
                 type: string
                 description: |-
                   [RHAI](https://rhai.rs/book/about/features.html) の式で、リクエストのパスやヘッダなどを照合するための条件を記述する。
+                  '{{' と '}}' で囲む必要はなく、全体が RHAI の式として評価される。
                 example: request.path.starts_with("/api") && request.headers["X-Auth-Token"]
               action:
                 oneOf:
@@ -1288,6 +1582,7 @@ components:
                           true の場合、リクエストボディは転送されない。
                           デフォルトは false で、リクエストボディは転送される。
                         example: false
+                    additionalProperties: false
                   - type: object
                     title: Redirect
                     description: |-
@@ -1303,6 +1598,7 @@ components:
                         description: |-
                           レスポンスの Location ヘッダに設定されるリダイレクト先のURL。
                         example: https://idp.example.com/login
+                    additionalProperties: false
                   - type: object
                     title: Jump
                     description: |-
@@ -1316,6 +1612,61 @@ components:
                         description: |-
                           ルーティングチェーンのURN。
                         example: urn:chip-in:routing-chain:example-realm:cms-chain
+                    additionalProperties: false
+                  - type: object
+                    title: SetVariables
+                    description: |-
+                      RHAI の式を評価して、変数に値を設定するアクション。
+                      このアクションは、リクエストやレスポンスの情報を参照して、変数に値を設定するために使用される。
+                    properties:
+                      type:
+                        type: string
+                        enum: [setVariables]
+                      variables:
+                        type: object
+                        description: |-
+                          設定する変数のキーと値のペア。
+                        example:
+                          savedCookie: "SESSION={{request.sessionID}}; Path=/; Secure; HttpOnly"
+                        additionalProperties:
+                          type: string
+                          description: |-
+                            プロパティの値が文字列で、かつ '{{' と '}}' が含まれている場合、その部分は RHAI の式として評価される。
+                            RHAI の式内では、リクエストやレスポンスの情報を参照して値を算出することができる。
+                            数値や booleanの場合はそのまま出力される。オブジェクトや配列の場合は、JSON文字列に変換されて出力される。
+                            プロパティの値が null の場合は、変数は設定されず、設定済みの変数は削除される。
+                    additionalProperties: false
+                  - type: object
+                    title: SetHeaders
+                    description: |-
+                      HTTP ヘッダーの設定を行うためのアクション。
+                      このアクションは、リクエストやレスポンスのヘッダを設定するために使用される。
+                    properties:
+                      type:
+                        type: string
+                        enum: [setHeaders]
+                      target:
+                        type: string
+                        enum: [request, response]
+                        description: |-
+                          ヘッダの設定先。request の場合はリクエストヘッダ、response の場合はレスポンスヘッダ。
+                        example: response
+                      headers:
+                        type: object
+                        description: |-
+                          設定するヘッダのキーと値のペア。
+                        example:
+                          content-type: "application/json"
+                          'X-Forwarded-For': "{{request.clientIp}}"
+                        additionalProperties:
+                          type: string
+                          description: |-
+                            プロパティの値が文字列で、かつ '{{' と '}}' が含まれている場合、その部分は RHAI の式として評価される。
+                            RHAI の式内では、リクエストやレスポンスの情報を参照して値を算出することができる。
+                            ただし、RHAI 式の評価結果が undefined や null の場合はヘッダは設定されず、設定済みのヘッダは削除される。
+                            数値や booleanの場合はそのまま出力される。オブジェクトや配列の場合は、JSON文字列に変換されて出力される。
+                            プロパティの値が null の場合は、ヘッダは設定されず、設定済みのヘッダは削除される。
+                    additionalProperties: false
                   - type: object
                     title: AccessLog
                     description: |-
@@ -1329,10 +1680,16 @@ components:
                         description: |-
                           ログ出力サービスのURN。
                         example: urn:chip-in:servies:example-realm:access-log-service
+                      maxValueLength:
+                        type: integer
+                        default: 512
+                        description: |-
+                          ログの項目の値の最大長。デフォルトは 512 で、512文字を超える場合は切り捨てられる。
+                        example: 512
                       format:
                         type: object
                         description: |-
-                          ログ出力のフォーマット。RHAI の式で、リクエストやレスポンスの情報を参照してログ出力する。
+                          ログ出力のフォーマット。1行1オブジェクトのJSON形式で出力される。
                         example:
                           timestamp: "now()"
                           method: "request.method"
@@ -1351,14 +1708,18 @@ components:
                         additionalProperties:
                           type: string
                           description: |-
-                            RHAI の式で、リクエストやレスポンスの情報を参照して値を算出する。ただし、結果が undefined や null の場合は "-" となる。
+                            プロパティの値は、'{{' と '}}' で囲む必要はなく、全体が RHAI の式として評価される。
+                            RHAI の式内では、リクエストやレスポンスの情報を参照して値を算出することができる。
+                            ただし、結果が undefined や null の場合は "-" となる。
+                            また、値が文字列であり、かつ、その長さが maxValueLength を超える場合は切り捨てられ、最後に "...truncated" が付加される。
+                            数値や booleanの場合はそのまま出力される。オブジェクトや配列の場合は、JSON文字列に変換されて出力される。
+                    additionalProperties: false
+      additionalProperties: false
 
     Hub:
       type: object
       required:
         - name
-        - realm
-        - urn
         - title
         - fqdn
         - serverCert
@@ -1372,9 +1733,11 @@ components:
           example: hub1
         realm:
           type: string
+          readOnly: true
+          format: urn
           description: |-
-            SPN Hub が属する realm の名前。URN の一部として使用される。
-          example: example-realm
+            SPN Hub が属する realm の URN。
+          example: urn:chip-in:realm:example-realm
         urn:
           type: string
           readOnly: true
@@ -1418,6 +1781,7 @@ components:
             MIIEpAIBAAKCAQEA7v1z1Z2k5b4wMA0GCSqGSIb3DQEBCwUAMEUxCzAJBgNVBAYT
             ...
             -----END RSA PRIVATE KEY-----
+      additionalProperties: false
 
     Service:
       required:
@@ -1435,7 +1799,15 @@ components:
           description: |-
             サービスの名前。URN の一部として使用される。
             文字列は小文字英字、数字、ハイフン、アンダースコアのみを含むことができる。
+            ただし、先頭がハイフンであってはならない。
           example: authz-rbac
+        hub:
+          type: string
+          readOnly: true
+          format: urn
+          description: |-
+            サービスが接続される SPN Hub のURN。
+          example: urn:chip-in:network:example-realm:hub1
         urn:
           type: string
           readOnly: true
@@ -1511,6 +1883,8 @@ components:
             クライアント証明書の Subject の値と照合される
           example:
             - api-gateway
+      additionalProperties: false
+
     Error:
       type: object
       properties:
@@ -1521,6 +1895,53 @@ components:
       required:
         - code
         - message
+      additionalProperties: false
+
+    RealmDefinition:
+      type: object
+      properties:
+        realm:
+          $ref: '#/components/schemas/Realm'
+          description: |-
+            レルムの定義。レルムは、SPNの基本的な単位であり、DNSゾーン、仮想ホスト、ルーティングチェーン、SPN Hub、サービスなどを含む。
+        zones:
+          type: array
+          items:
+            $ref: '#/components/schemas/Zone'
+          description: |-
+            レルムに属するゾーンのリスト。各ゾーンは、DNSレコードを管理するための情報を含む。
+        subdomains:
+          type: array
+          items:
+            $ref: '#/components/schemas/Subdomain'
+          description: |-
+            レルムに属するサブドメインのリスト。
+        virtualHosts:
+          type: array
+          items:
+            $ref: '#/components/schemas/VirtualHost'
+          description: |-
+            レルムに属する仮想ホストのリスト。各仮想ホストは、FQDN、ルーティングチェーン、SSL/TLS証明書などの情報を含む。
+        routingChains:
+          type: array
+          items:
+            $ref: '#/components/schemas/RoutingChain'
+          description: |-
+            レルムに属するルーティングチェーンのリスト。各ルーティングチェーンは、リクエストの処理を行うためのルールの集合を含む。
+        hubs:
+          type: array
+          items:
+            $ref: '#/components/schemas/Hub'
+          description: |-
+            レルムに属する SPN Hub のリスト。各 SPN Hub は、SPN Hub の名前、FQDN、サーバ証明書、サーバ証明書の秘密鍵などの情報を含む。
+        services:
+          type: array
+          items:
+            $ref: '#/components/schemas/Service'
+          description: |-
+            レルムに属するサービスのリスト。各サービスは、サービスの名前、URN、タイトル、説明、提供者、利用者などの情報を含む。 
+      additionalProperties: false
+
   requestBodies:
     Service:
       description: Service object that needs to be added to the SPN
