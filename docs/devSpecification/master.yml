@@ -3,10 +3,10 @@ realm:
   title: "Master Realm"
   description: "Master realm for development purposes"
   disabled: false
-  cacert: "{{ env.MASTER_CA_CERT }}"
-  signingKey: "{{ env.MASTER_SIGNING_KEY }}"
+  cacert: "${MASTER_CA_CERT}"
+  signingKey: "${MASTER_REALM_SIGNING_KEY}"
 zones:
-  - zone: "{{ env.DEFAULT_ZONE_DOMAIN }}"
+  - zone: "${DEFAULT_ZONE_DOMAIN}"
     realm: "master"
     title: "Default Zone"
     description: "Default zone for the master realm"
@@ -16,7 +16,7 @@ subdomains:
   - name: "master"
     title: "Master Subdomain"
     description: "Subdomain for the master realm"
-    zone: "urn:chip-in:zone:master:{{ env.DEFAULT_ZONE_DOMAIN }}"
+    zone: "urn:chip-in:zone:master:${DEFAULT_ZONE_DOMAIN}"
 virtualHosts:
   - name: "www"
     title: "Homepage Virtual Host"
@@ -38,9 +38,9 @@ hubs:
     title: "Master Hub"
     description: "Hub for the master realm"
     urn: "urn:chip-in:hub:master:masterHub"
-    fqdn: "hub.master.{{ env.DEFAULT_ZONE_DOMAIN }}"
-    serverCert: "{{ env.MASTER_HUB_SERVER_CERT }}"
-    serverCertKey: "{{ env.MASTER_HUB_SERVER_CERT_KEY }}"
+    fqdn: "hub.master.${DEFAULT_ZONE_DOMAIN}"
+    serverCert: "${MASTER_HUB_SERVER_CERT}"
+    serverCertKey: "${MASTER_HUB_SERVER_CERT_KEY}"
 services:
   - name: www-contents
     urn: urn:chip-in:service:master:www-contents
@@ -48,6 +48,6 @@ services:
     realm: urn:chip-in:realm:master
     hubName: masterHub
     providers:
-      - urn:chip-in:end-point:hub.master.{{ env.DEFAULT_ZONE_DOMAIN }}:www-contents-server
+      - urn:chip-in:end-point:hub.master.${DEFAULT_ZONE_DOMAIN}:www-contents-server
     consumers:
-      - urn:chip-in:end-point:hub.master.{{ env.DEFAULT_ZONE_DOMAIN }}:api-gateway
+      - urn:chip-in:end-point:hub.master.${DEFAULT_ZONE_DOMAIN}:api-gateway
